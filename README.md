@@ -29,6 +29,8 @@
 
 ## 0000. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges,
       tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
+      Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully,
+      do NOT change the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables).
 
 ## 000. Git clone day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files.
 
