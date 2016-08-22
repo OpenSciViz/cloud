@@ -80,6 +80,7 @@
 ## 13. init_db ensures there is a mysql cloud db-account, and /etc/cloudstack/management/db.properties contains the proper db-account and passwords
 
 ## 14. There is no equiv. agent setup script for /etc/cloudstack/agent/agent.properties; this must be hand edited
+
   ### a.) Create 2 uuids: uuidgen && uuidgen ... samples below ...
 
       88bf4f6f-b542-4d71-b733-e1e0bc28542c
@@ -97,7 +98,7 @@
 
   ### d.) The simplest edit of the agent.properties file would be just the 2 uuids. This would induce the agent to look
       at the host network config for NICs (but it ignores bridges) -- it will then proceed to create its own bridge(s).
-      Event when one edits the agent.properties, the agent proceeds with "cloudbr0" and possible "cloudbr1". For our
+      Even when one edits the agent.properties, the agent proceeds with "cloudbr0" and possibly "cloudbr1". For our
       single host setup a single bridge suffices, so consider editing all bridge entries to == cloudbr0.
 
   ### e.) Another edit to consider in agent.properties is the "use local storage", ensuring that guest VM image files
@@ -134,7 +135,8 @@
     as described in the KVM docs., but all are assigned to the cloudbr0 bridge.
 
 ## 01. Some host system configs. and /etc file edits that seem to improve the odds of success:
-    ### a.) Rebooting with the Secondary Storage VM up-n-running can hang NFS, due to mounts being "busy", and
+
+  ### a.) Rebooting with the Secondary Storage VM up-n-running can hang NFS, due to mounts being "busy", and
         starting NFS at host boot can also be problematic (especially if /etc/fstab indicates NFS mounts).
         Consequently it is safer to disable many of the cloudstack service deps. After a clean reboot:
 
@@ -286,6 +288,7 @@
 # D. System VM Patches and Early-Config -- once the admin GUI "Infrastructure" shows 2 System VMs
 
 ## 00. Differences between release patching
+
   ### a.) 4.9: /usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
      -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
   The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
@@ -410,14 +413,15 @@
 
 ## 02. Once the new (featured) ISO or Template is selected, proceed with the subsequent steps and launch.
      There are 8 steps to the "Add Instance" action:
-  ## a.) Setup -- zone and ISO or Template buttons
-  ## b.) Select -- specific ISO or Template (qcow2 image for KVM hypervisor) from "Featured" or other tab.
-  ## c.) Compute Offering -- small or medium (RAM, CPUs, etc.)
-  ## d.) Disk Offering == small, medium, large, custom, etc.
-  ## e.) Affinity -- no affinity groups are defined when there is only 1 hypervisor host on 1 cluster (our only possible affinity).
-  ## f.) Network -- in "basic networking" config there is only 1 network choice ("default")
-  ## g.) SSH KeyPair -- none; each guest VM should ultimately establish unique pairs per user.
-  ## h.) Review and Launch -- provide an optional name for the instance.
+
+  ### a.) Setup -- zone and ISO or Template buttons
+  ### b.) Select -- specific ISO or Template (qcow2 image for KVM hypervisor) from "Featured" or other tab.
+  ### c.) Compute Offering -- small or medium (RAM, CPUs, etc.)
+  ### d.) Disk Offering == small, medium, large, custom, etc.
+  ### e.) Affinity -- no affinity groups are defined when there is only 1 hypervisor host on 1 cluster (our only possible affinity).
+  ### f.) Network -- in "basic networking" config there is only 1 network choice ("default")
+  ### g.) SSH KeyPair -- none; each guest VM should ultimately establish unique pairs per user.
+  ### h.) Review and Launch -- provide an optional name for the instance.
 
 ## 03. Navigate back to the GUI "Instances" page and refresh it a few time to observer the table of
      instances update and eventually show its dynamically allocated IP address and its "State"
