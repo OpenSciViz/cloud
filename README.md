@@ -1,6 +1,7 @@
 # Cloudstack
-## Evaluation of cloudstack 4.0.0, 4.8.01, and 4.9.0.
 
+## Evaluation of cloudstack 4.0.0, 4.8.01, and 4.9.0 all-in-one deployment(s)
+   Each evaluation performed with a single CentOS 6 host running all services, using a single KVM hypervisor.
 
 # Refs:
 
@@ -120,11 +121,12 @@
     3 (virtual) NICs and 2 bridges (cloudbr0 and cloudbr1) network config. using ifconfig (vconfig, and brctl
     commands provide diagnostics and non-persistent config. options).
 
-    Our c8-13 and c8-14 (/etc/sysconfig/network-scripts/ifcfg*) are slightly different simplifications of
-    the KVM doc. example which primarily use cloudbr0 (cloudbr0-1 seem to be hardcoded in some cloudstack code).
+    Our two evaluation hosts (c8-13 and c8-14) /etc/sysconfig/network-scripts/ifcfg* are slightly different
+    simplifications of the KVM doc. example which primarily use cloudbr0 (cloudbr0-1 seem to be hardcoded in
+    some cloudstack code).
 
     The c8-13 network is actually not setup with the tagged VLAN 100-300, it uses cloudbr0 with multiple
-    IPs configured vi the iproute2-tools (not ifconfig-net-tools; see c8-14:/etc/rc.local):
+    IPs configured vi the iproute2-tools (not ifconfig-net-tools; see /etc/rc.local):
 
       ip addr add 172.16.10.2/24 brd + dev cloudbr0
 
