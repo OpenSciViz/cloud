@@ -4,24 +4,38 @@ function isomnt {
 
   imgname=$(basename ${imgpath%.*})
   ext=$(basename ${imgpath##*.})
-  echo $imgname $ext
+  echo $imgpath $imgname $ext
 
   if [ $ext != 'iso' ] ; then
     echo "$ext !== iso ... abort"
-    exit
+    return
   fi
 
   mntpath=/mnt/iso/${imgname}
-  mkdir -p
-  mount -t iso9660 -o loop $imgpath $mntpath
-  \ls -al
+  mkdir -p $mntpath >& /dev/null
+  if [ -e $mntpath ] ; then
+    echo "mount -t iso9660 -o loop $imgpath $mntpath"
+    mount -t iso9660 -o loop $imgpath $mntpath
+  fi
+  echo ls of $mntpath ...
+  \ls -al ${mntpath}/..
+  file $mntpath
 }
 
 # unit test
 mkdir -p ${HOME}/KVMimages >& /dev/null
 
+echo '1st test should fail'
 touch ${HOME}/KVMimages/foo.bar
 isomnt ${HOME}/KVMimages/foo.bar
 
+echo '2nd test should fail'
 touch ${HOME}/KVMimages/foobar.iso
 isomnt ${HOME}/KVMimages/foobar.iso
+
+# default should work
+echo '3nd test should succeed (defaults)'
+isomnt
+
+echo '4nd test should succeed (non-defaults)'
+isomnt ${HOME}/KVMimages/SL-67-x86_64-2015-08-25-LiveMiniCD.iso
