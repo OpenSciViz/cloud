@@ -1,5 +1,5 @@
-# cloudstack
-cloudstack 4.0.0, 4.8.01, 4.9.0 eval.
+# Cloudstack
+## Evaluation of cloudstack 4.0.0, 4.8.01, and 4.9.0.
 
 
 # Refs:
@@ -64,7 +64,7 @@ cloudstack 4.0.0, 4.8.01, 4.9.0 eval.
 
       4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts
 
-## 07. Start the mysqld and source the (ICBR) cs_mysql.sh: ". ./cs_mysql.sh"
+## 07. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
 ## 08. The yum/rpm management post-install indicates one should manually run: /usr/bin/cloudstack-setup-management
 
@@ -72,7 +72,7 @@ cloudstack 4.0.0, 4.8.01, 4.9.0 eval.
 
 ## 10. The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
 
-## 11. The newly created iptables file lacks all ICBR annotations/comments; these should be merged into the new file from the backup.
+## 11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
 
 ## 12. Our cs_mysql.sh bash script defines some convenient bash functions, run: init_db
 
@@ -218,10 +218,10 @@ cloudstack 4.0.0, 4.8.01, 4.9.0 eval.
         Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
         the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
 
-  ### c.) One has run our ICBR unlock.sh script to ensure the cloudstack services have full access to the file-system. this sets selinux
+  ### c.) One has run the unlock.sh script to ensure the cloudstack services have full access to the file-system. this sets selinux
         to permissive and chmod's certain essential items.
 
-  ### d.) The route table has been configured with the desired default gateway -- 10.101.x.1 (ICBR local) or 10.13.y.1 (UF campus)
+  ### d.) The route table has been configured with the desired default gateway -- 10.a.b.1 or 10.c.d.1 or 172.16.a.1 or 172.17.b.1 ...
 
   ### e.) The cloudbr0 bridge is up and fully configured with desired management and hypervisor host IP: brtcl show and ifconfig, etc.
         Note the KVM installation guide indicates two cloudstack specific bridges: cloudbr0 and cloudbr1 ... however,
