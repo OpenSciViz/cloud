@@ -3,7 +3,7 @@
 ## Evaluation of cloudstack 4.0.0, 4.8.01, and 4.9.0 all-in-one deployment(s)
    Each evaluation performed with a single CentOS 6 host running all services, using a single KVM hypervisor.
 
-# Refs:
+# Refs.
 
   ## At a minimum, follow the official installation-n-config guides; and each doc includes two must-read sections entitled:
      "Quick Installation Guide for CentOS6" and "Host KVM Installation".
