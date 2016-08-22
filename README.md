@@ -1,7 +1,7 @@
 # Cloudstack
 
-## Evaluation of cloudstack 4.0.0, 4.8.01, and 4.9.0 all-in-one deployment(s)
-   Each evaluation performed with a single CentOS 6 host running all services, using a single KVM hypervisor.
+## Evaluation of cloudstack 4.8.0, 4.8.0.1, and 4.9.0 all-in-one deployment(s)
+   Each evaluation is performed with a single CentOS 6 host running all services, using the KVM hypervisor.
 
 # Refs.
 
@@ -40,8 +40,9 @@
     and perform the indicated sets of "yum installs" and "pip installs".
 
 ## 02. After installing all deps, make sure mysqld and NetworkManager are not running:
-    a.) service mysqld stop ; chkconfig mysqld off
-    b.) service NetworkManager stop ; chkconfig NetworkManager off
+
+    ### a.) service mysqld stop ; chkconfig mysqld off
+    ### b.) service NetworkManager stop ; chkconfig NetworkManager off
         (consider yum remove NetworkManager)
 
 ## 03. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available
@@ -50,15 +51,17 @@
 
 ## 04. After yum/rpm of cloudstack-management and cloudstack-agent (and/or after running the setup-managment script, see below),
     check if they are up/running, and if so, stop them:
-    a.) service cloudstack-agent status ; service cloudstack-agent stop ; chkconfig NetworkManager off
-    b.) service cloudstack-management status ; service cloudstack-management stop ; chkconfig cloudstack-management off
+
+    ### a.) service cloudstack-agent status ; service cloudstack-agent stop ; chkconfig NetworkManager off
+    ### b.) service cloudstack-management status ; service cloudstack-management stop ; chkconfig cloudstack-management off
 
 ## 05. yum/rpm cloudstack-cli and use python-pip for cloud(stack) modules: pip install cloudmonkey apache-libcloud
 
 ## 06. Backup the newly created directories (by the yum/rpm) /usr/share/cloudstack-common/vms and /etc/cloudstack/{agent,management}
-    a.) /etc/cloudstack/agent/agent.properties -- must be hand-edited and backed-up; agent service (re)start will overwrite it
-    b.) /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
-    c.) The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
+
+    ### a.) /etc/cloudstack/agent/agent.properties -- must be hand-edited and backed-up; agent service (re)start will overwrite it
+    ### b.) /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
+    ### c.) The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
 
       4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
            -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
@@ -265,7 +268,7 @@
     ### b.) Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
     ### c.) Hypervisor.list -- just KVM
     ### d.) Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
-                                 If not properly set, the secondary storage VM will fail.
+            If not properly set, the secondary storage VM will fail.
     ### d.) System.vm.use.localstorage -- true
     ### e.) System.vm.default.hypervisor -- KVM
     ### f.) *.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
@@ -296,7 +299,7 @@
   One can virsh console into each running system VM (root password) and manually configure sshd,
   and cut-n-paste the RSA key into /root/.ssh/*rsa*.
 
-  #### b.) 4.8: this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty:
+  ### b.) 4.8: this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty:
      -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
      -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
 
@@ -310,8 +313,8 @@
 
   Once /usr/local/cloud/systemvm/* files are installed, (re)run / (re)start the cloud services:
 
-  ### a.) service cloud-early-config restart -- this may cause a reboot of the VM
-  ### b.) service cloud restart -- check /var/log/cloud.log for errors, exceptios, etc:
+  ### c.) service cloud-early-config restart -- this may cause a reboot of the VM
+  ### d.) service cloud restart -- check /var/log/cloud.log for errors, exceptios, etc:
       egrep -i 'abor|canno|erro|excep|fail|fata|unable' /var/log/cloud.log
 
 ## 01. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to
