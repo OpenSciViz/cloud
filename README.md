@@ -5,7 +5,7 @@
 
 # Refs:
 
-  At a minimum, follow the official installation-n-config guides; and each doc includes two must-read sections entitled:
+  ## At a minimum, follow the official installation-n-config guides; and each doc includes two must-read sections entitled:
      "Quick Installation Guide for CentOS6" and "Host KVM Installation".
 
   ## Release 4.9
