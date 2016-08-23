@@ -53,6 +53,15 @@ function git1 {
   git clone $1 --depth 1
 }
 
+function gitbr {
+  if [ ! $1 ] ; then
+    echo please provide branch name ... abort
+    return
+  fi
+  git branch --set-upstream-to=origin/$1
+  git pull
+}
+
 function nistime {
   nt=`nc time.nist.gov 13 < /dev/null 2>&1 | grep NIST| awk '{print $2, $3}'`
   echo "nist.time.gov: $nt"

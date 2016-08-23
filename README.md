@@ -22,7 +22,14 @@
   only 1 hit -- http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.9/hypervisor/xenserver.html?highlight=uuid
   See the below's agent.properties discussion
 
-  Also, this ref is worth a look, although a tad dated:
+  ## While this is an OpenStack doc. the VLAN and other section apply to Cloudstack:
+    http://docs.openstack.org/mitaka/networking-guide/intro-basic-networking.html#vlans
+
+    And here is more on the Cloudstack VM network subsystem (somewhat corresponding to OpenStack Neutron):
+    http://docs.cloudstack.apache.org/projects/cloudstack-administration/en/4.9/networking_and_traffic.html
+
+
+  ## Also, this ref is worth a look, although a tad dated:
      https://cwiki.apache.org/confluence/display/CLOUDSTACK/SSVM,+templates,+Secondary+storage+troubleshooting
 
 # A. Preliminaries
