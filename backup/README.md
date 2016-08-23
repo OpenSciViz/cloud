@@ -33,32 +33,32 @@
 
 # A. Preliminaries
 
-## 0000. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges,
-      tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
+## 0000. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges, tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
+
       Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully,
       do NOT change the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables).
 
 ## 000. Git clone day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files.
 
 ## 00. Backup /etc/sysconfig/iptables file.
+
     Note the ports cloudstack needs: https://cwiki.apache.org/confluence/display/CLOUDSTACK/Ports+used+by+CloudStack
     for Apache Tomcat (HTTPD), NFS, DNS, etc., and also VNC 5800-6100
 
-## 01. Set SELinux to Permissive: "setenforce 0". Review cs_yum_rpms.sh (do not attempt to run this pseudo bash script),
-    and perform the indicated sets of "yum installs" and "pip installs".
+## 01. Set SELinux to Permissive: "setenforce 0". Review cs_yum_rpms.sh (do not attempt to run this pseudo bash script), and perform the indicated sets of "yum installs" and "pip installs".
 
 ## 02. After installing all deps, make sure mysqld and NetworkManager are not running:
 
     ### a.) service mysqld stop ; chkconfig mysqld off
     ### b.) service NetworkManager stop ; chkconfig NetworkManager off
-        (consider yum remove NetworkManager)
 
-## 03. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available
-    via yum. For 4.9 it was necessary to download the new mysql-connector-python-*.rpm from:
+    And consider yum remove NetworkManager.
+
+## 03. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available via yum. For 4.9 it was necessary to download the new mysql-connector-python-*.rpm from:
+
       https://dev.mysql.com/downloads/connector/python
 
-## 04. After yum/rpm of cloudstack-management and cloudstack-agent (and/or after running the setup-managment script, see below),
-    check if they are up/running, and if so, stop them:
+## 04. After yum/rpm of cloudstack-management and cloudstack-agent (and/or after running the setup-managment script, see below), check if they are up/running, and if so, stop them:
 
     ### a.) service cloudstack-agent status ; service cloudstack-agent stop ; chkconfig NetworkManager off
     ### b.) service cloudstack-management status ; service cloudstack-management stop ; chkconfig cloudstack-management off
@@ -102,26 +102,21 @@
       guid=88bf4f6f-b542-4d71-b733-e1e0bc28542c
       local.storage.uuid=d2197860-f163-402e-8553-cce792a9cd39
 
-  ### c.) Note the agent.properties file contains zone, pod, and cluster names each set to "default". If these are left as-is/unedited,
-      one MUST specify "default" as the name for the zone, pod, and cluster setup with the Admin GUI (see below).
+  ### c.) Note the agent.properties file contains zone, pod, and cluster names each set to "default". If these are left as-is/unedited, one MUST specify "default" as the name for the zone, pod, and cluster setup with the Admin GUI (see below).
+
       Also be sure to double-check there are no typos in the zone, pod, and cluster names. The names that are present in
       the agent.properties files MUST be CONGRUENT with the names entered in the Admin GUI dialogues.
 
-  ### d.) The simplest edit of the agent.properties file would be just the 2 uuids. This would induce the agent to look
-      at the host network config for NICs (but it ignores bridges) -- it will then proceed to create its own bridge(s).
-      Even when one edits the agent.properties, the agent proceeds with "cloudbr0" and possibly "cloudbr1". For our
-      single host setup a single bridge suffices, so consider editing all bridge entries to == cloudbr0.
+  ### d.) The simplest edit of the agent.properties file would be just the 2 uuids. This would induce the agent to look at the host network config for NICs (but it ignores bridges). It does not create bridges, expecting to find "cloudbr0" and optionally "cloudbr1". But it will create 3 or 4 vNICs for each system VM and vNIC for each guest VM which it attaches to the bridge(s).
 
-  ### e.) Another edit to consider in agent.properties is the "use local storage", ensuring that guest VM image files
-      are placed in the standard location /var/lib/libvirt/images.
+      Even when one edits the agent.properties, the agent proceeds with "cloudbr0" and possibly "cloudbr1". For our single host setup a single bridge suffices, so consider editing all bridge entries in agent.properties to == cloudbr0.
+
+  ### e.) Another edit to consider in agent.properties is the "use local storage", ensuring that guest VM image files are placed in the standard location /var/lib/libvirt/images.
 
 
 # B. Other system config. /etc/... and /mnt/... (the latter is NFS) files that must be modified to properly support cloudstack
 
-## 00. It is IMPORTANT to note the host KVM installation indicates the NFS /mnt/secondary MUST be remain mounted at all times.
-    Also it is IMPLIED that /mnt/secondary is a MANDATORY mount point (not /net/secondary or whatever), despite the
-    admin GUI dialogue that prompts the user to enter whatever. So be sure to enter this mount point name without typos
-    in the Admin GUI dialogue.
+## 00. It is IMPORTANT to note the host KVM installation indicates the NFS /mnt/secondary MUST be remain mounted at all times. Also it is IMPLIED that /mnt/secondary is a MANDATORY mount point (not /net/secondary or whatever), despite the admin GUI dialogue that prompts the user to enter whatever. So be sure to enter this mount point name without typos in the Admin GUI dialogue.
 
     It is also IMPORTANT to note that whether the management service and hypervisor agent service are running on
     the same host or different hosts on the LAN, the system install-n-config has fewer glitches/gotchas if one
@@ -192,35 +187,36 @@
 
 
   ### b.) Before a reboot, double check /etc/rc.local:
+
         c8-13:/etc/rc.local -- ip addr add 172.16.10.2/24 brd + dev cloudbr0
         c8-14:/etc/rc.local -- ?
 
-  ### c.) After a reboot, check the route table and network config (route -n, ifconfig, etc.).
-        We need to decide if the default boot-up should enable the public / campus VLAN 989 tag. But
-        there must be a default gateway in the route table, otherwise the the cloudstack-management
-        service will fail to startup (with very obscure error logs). Once the cloudstack system
-        has been configured with a specific default gateway in the route table, changing the
-        default gateway seems to cause problems for cloudstack-management.
+  ### c.) After a reboot, check the route table and network config (route -n, ifconfig, etc.). We need to decide if the default boot-up should enable the public / campus VLAN 989 tag.
+
+    But there must be a default gateway in the route table, otherwise the the cloudstack-management service will fail to startup
+    (with very obscure error logs). Once the cloudstack system has been configured with a specific default gateway in the route table,
+    changing the default gateway seems to cause problems for cloudstack-management.
 
   ### d.) Various and sundry files under /etc that have been touched during the cloudstack eval:
-        /etc/audit* -- selinux audit rules
-        /etc/init.d/cloudstack* -- startuo scripts
-        /etc/libvirt* -- conf user, group, tcp, etc.
-        /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} --
-          ipv4 forwarding, NFS, KVM, non-krb5 ssh logins
-        /etc/modprobe.d/ipv6.conf -- comment all lines out (ala Sir Alex)
-        /etc/polkit* -- libvirt users
-        /etc/security/* -- non-krb5 logins
-        /etc/selinux/config -- permissive vs. enforcing
-        /etc/ssh/* -- non-krb5 login
-        /etc/sysconfig/{ptables,network*} -- eth0-1, br0-1, cloudbr0-1
-        /etc/udev/rules.d/* -- ?
-        /etc/xinetd.d/* -- TBD
-        /etc/yum.repos.d/cloudstack -- yum install
+
+    ####  /etc/audit* -- selinux audit rules
+    ####  /etc/init.d/cloudstack* -- startuo scripts
+    ####  /etc/libvirt* -- conf user, group, tcp, etc.
+    ####  /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} -- ipv4 forwarding, NFS, KVM, non-krb5 ssh logins
+    ####  /etc/modprobe.d/ipv6.conf -- comment all lines out (ala Sir Alex)
+    ####  /etc/polkit* -- libvirt users
+    ####  /etc/security/* -- non-krb5 logins
+    ####  /etc/selinux/config -- permissive vs. enforcing
+    ####  /etc/ssh/* -- non-krb5 login
+    ####  /etc/sysconfig/{ptables,network*} -- eth0-1, br0-1, cloudbr0-1
+    ####  /etc/udev/rules.d/* -- ?
+    ####  /etc/xinetd.d/* -- TBD
+    ####  /etc/yum.repos.d/cloudstack -- yum install
 
 # C. Initial Configuration via Admin GUI
 
 ## 00. Before starting the cloudstack services be sure that:
+
   ### a.) Mysqld, RPCbind, and NFS services are running. NFS exports should include:
         exportfs -v
         /export       	  <world>(rw,wdelay,nohide,no_root_squash,no_subtree_check,sec=sys,rw,no_root_squash,no_all_squash)
@@ -244,33 +240,35 @@
 
 ## 01. One may wish to edit the log4j XML config. files to increase log-levels to DEBUG or TRACE:
 
-      /etc/cloudstack/agent/log4j-cloud.xml
-    and
-      /etc/cloudstack/management/log4j-cloud.xml
+  ### /etc/cloudstack/agent/log4j-cloud.xml
+  ### /etc/cloudstack/management/log4j-cloud.xml
 
 ## 02. Start the management service: service cloudstack-management start && tail -f /var/log/cloudstack/management/management-server.log
 
 ## 03. Navigate one's browser to the management (for a single host setup this is also the hypervisor) host URL -- http://host:8080/client
 
-## 04. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root". All
-    attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful configs
-    have occurred when using root. Note that the setup script mentioned above creates a so-called "password-locked" account
-    "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the cloud account a password and try
-    using it for adding a host to a cluster. Also note that adding a host to a cluster requires the cloudstack-agent service
-    to be started and fully initialized and communicating with both the management service and libvirtd. If one has restarted
-    the management service after editing the Global Settings (see below), with the hypervisor agent up, the agent will usually
-    reconnect gracefully. If the agent is not up, the next time one attempts to use the management service Admin GUI to add
-    a host to a cluster, the management server may attempt to start the agent (assuming it is configured to run on the same host),
-    but that can take awhile, and it's quicker to manually start the agent once the "heartbeats" appear in the management
-    server log.
+## 04. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root".
+
+  Allattempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful configs
+  have occurred when using root. Note that the setup script mentioned above creates a so-called "password-locked" account
+  "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the cloud account a password and try
+  using it for adding a host to a cluster. Also note that adding a host to a cluster requires the cloudstack-agent service
+  to be started and fully initialized and communicating with both the management service and libvirtd. If one has restarted
+  the management service after editing the Global Settings (see below), with the hypervisor agent up, the agent will usually
+  reconnect gracefully. If the agent is not up, the next time one attempts to use the management service Admin GUI to add
+  a host to a cluster, the management server may attempt to start the agent (assuming it is configured to run on the same host),
+  but that can take awhile, and it's quicker to manually start the agent once the "heartbeats" appear in the management
+  server log.
 
 ## 05. Check the /var/log/cloudstack/agent/agent.log -- it it does not exist or is empty, one may start the agent manually:
+
     service cloudstack-agent start && tail -f /var/log/cloudstack/agent/agent.log
 
-## 06. Global Settings are IMPORTANT -- navigate to the left-side-bar of the Admin GUI and click "Global Settings" (directly
-    under "Infrastructure"). A very large (but searchable) table of configuration items is presented. Many of these items
-    must be manually set after the initial management serivce startup, before starting the hypervisor agent service. In most cases,
-    (re)setting a Global Settings item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
+## 06. Global Settings are IMPORTANT -- navigate to the left-side-bar of the Admin GUI and click "Global Settings" (directly under "Infrastructure").
+
+  A very large (but searchable) table of configuration items is presented. Many of these items must be manually set after the
+  initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting a Global Settings
+  item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
 
     ### a.) CIDRs -- management server network, control network, guest VM
     ### b.) Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
@@ -283,10 +281,10 @@
     ### g.) ???
 
 ## 07. Remember, in general any Global Settings change requires a restart of cloudstack-management.
-    4.8 seldom stops on the first try, but usually on the 2nd; and before starting it, be sure
-    to restore /usr/share/cloudstack-common/vms/systemvmiso from its (correct) backup.
-    4.9 restarts are much better behaved.
-    Also, there may be restart glitches ...
+
+  ###  4.8 seldom stops on the first try, but usually on the 2nd; and before starting it, be sure to restore /usr/share/cloudstack-common/vms/systemvmiso from its (correct) backup.
+
+  ### 4.9 restarts are much better behaved. Also, there may be restart glitches ...
 
   ### a.) make sure the proper default gateway is setup in the route table
   ### b.) make sure /var/log/cloudstack permissions are open
@@ -301,15 +299,17 @@
 ## 00. Differences between release patching
 
   ### a.) 4.9: /usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
-     -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
+
+  -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
   The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
   and cut-n-paste the RSA key into /root/.ssh/*rsa*.
 
   ### b.) 4.8: this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty:
-     -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
-     -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
+
+  -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
+  -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
 
   Virsh console usually will not work (in 4.8) until the system VMs are more fully patched.
   Fortunately ssh via -p 3922 and scp -P 3922 to the system VM's link-local eth0 (169.254.x.y) work.
@@ -322,19 +322,21 @@
   Once /usr/local/cloud/systemvm/* files are installed, (re)run / (re)start the cloud services:
 
   ### c.) service cloud-early-config restart -- this may cause a reboot of the VM
+
   ### d.) service cloud restart -- check /var/log/cloud.log for errors, exceptios, etc:
       egrep -i 'abor|canno|erro|excep|fail|fata|unable' /var/log/cloud.log
 
-## 01. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to
-  be refreshed manually to observe changes in state/status of the system VMs.
+## 01. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to be refreshed manually to observe changes in state/status of the system VMs.
 
-## 02. Once the System VMs are fully booted, try to virsh console into each. Virsh list should show
-  VM names s-*-VM for the secondary-storage VM, v-*-VM for the console-proxy VM, r-*-VM for
+## 02. Once the System VMs are fully booted, try to virsh console into each.
+
+  Virsh list should show VM names s-*-VM for the secondary-storage VM, v-*-VM for the console-proxy VM, r-*-VM for
   any virtual-router VM, and i-*-VM for any guest VMs. The virtual router VM (r-*-VM) does not
   appear to be created and booted by the system until one attempts to launch a guest VM.
 
-## 03. Note the system VMs are Debian 7 (wheezy) and are running sshd and iptables. It may be necessary
-  to modify /etc/ssh/sshd_conf and /etc/iptables/rules.v4 then restart each:
+## 03. Note the system VMs are Debian 7 (wheezy) and are running sshd and iptables.
+
+  It may be necessary to modify /etc/ssh/sshd_conf and /etc/iptables/rules.v4 then restart each:
 
   ### a.) service ssh restart
   ### b.) service iptables-persistent restart
@@ -351,8 +353,7 @@
   Internet access. Nevertheless, it is highly desirable to provide some level of Internet access from
   our private cloud.
 
-## 05. In the event our manual patch effort or some other activity has damaged a system VM beyond repair,
-  one can force the hypervisor agent to create new system VMs.
+## 05. In the event our manual patch effort or some other activity has damaged a system VM beyond repair, one can force the hypervisor agent to create new system VMs.
 
   Navigate to the "Infrastructure" page of the Admin GUI and select System VMs. Click on the (damaged) VM
   and select the option to place it into "maintenance mode". If that succeeds, select the option to
@@ -388,8 +389,9 @@
 
   ### a.) service cloudstack-agent start -- and after many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
 
-  ### b.) Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change
-      to green "Running". Note their names and IPs.
+  ### b.) Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change to green "Running".
+
+      Note their names and IPs.
 
   ### c.) Try to virsh console into each VM-name, or ssh -P 3922 into each VM's link-local IP.
 
@@ -401,29 +403,28 @@
 
 ## 01. Navigate to the Admin UI left-side-bar and to the Templates page.
 
-## 02. The Template pull-down allows one to either upload a template or specify a URL, but the upload
-    will not work from our iMAC desktops due to the CIDR network config. A URL of the management host
-    will work if we have an http web-server running on the host (and proper Global Settings).
+## 02. The Template pull-down allows one to either upload a template or specify a URL, but the upload will not work from our iMAC desktops due to the CIDR network config.
+
+    A URL of the management host will work if we have an http web-server running on the host (and proper Global Settings).
 
 ## 03. The ISO registration only supports URLs, again we need a http web-server up on the host.
 
 ## 04. Make sure to select/enable "Featured" and "Shared" in the registration dialogue.
-    The GUI will blink for a short while then a pop-up appears indicating success (or not).
-    But the success indicated is premature. It actually takes considerably longer for the
-    system to make the new offering available. Click thru "Add Instance" and "Template" or "ISO"
-    and "Featured" a few times and eventually the new item will be shown in the list. Sometimes
-    a new item can appear in a tab then be removed later by the system for mysterious reasons
-    (perhaps SELinux)?
+
+    The GUI will blink for a short while then a pop-up appears indicating success (or not). But the success indicated is premature.
+    It actually takes considerably longer for the system to make the new offering available.
+    Click thru "Add Instance" and "Template" or "ISO" and "Featured" a few times and eventually the new item will be shown in the list.
+    Sometimes a new item can appear in a tab then be removed later by the system for mysterious reasons (some I/O issure or perhaps SELinux)?
 
 # F. Launch and Use a Guest VM
 
 ## 00. Navigate to the Admin or User GUI left-side-bar and click "Instances", then click "Add Instance".
 
-## 01. A page is presented that allows one to navigate / choose "Featured" or "Community" or "Shared"
-     Templates or ISOs from their respective lists.
+## 01. A page is presented that allows one to navigate / choose "Featured" or "Community" or "Shared" Templates or ISOs from their respective lists.
 
 ## 02. Once the new (featured) ISO or Template is selected, proceed with the subsequent steps and launch.
-     There are 8 steps to the "Add Instance" action:
+
+  There are 8 steps to the "Add Instance" action:
 
   ### a.) Setup -- zone and ISO or Template buttons
   ### b.) Select -- specific ISO or Template (qcow2 image for KVM hypervisor) from "Featured" or other tab.
@@ -434,19 +435,16 @@
   ### g.) SSH KeyPair -- none; each guest VM should ultimately establish unique pairs per user.
   ### h.) Review and Launch -- provide an optional name for the instance.
 
-## 03. Navigate back to the GUI "Instances" page and refresh it a few time to observer the table of
-     instances update and eventually show its dynamically allocated IP address and its "State"
-     become green "Running".
+## 03. Navigate back to the GUI "Instances" page and refresh it a few time to observer the table of instances update and eventually show its dynamically allocated IP address and its "State" become green "Running".
 
 ## 04. Click on the instance name shown in the table to navigate to a page that present 4 tabs.
 
-## 05. The named instance page tab "Details" provides a scrollable list that shows VM info.
-     The "NICs" tab shows the guest VM's network config: IP, netmask, default gateway, etc.
-     There is also a "Security Groups" and "Statistics" tab, etc.
+## 05. The named instance page tab "Details" provides a scrollable list that shows VM info. The "NICs" tab shows the guest VM's network config: IP, netmask, default gateway, etc. There is also a "Security Groups" and "Statistics" tab, etc.
 
-## 06. Once the guest VM is fully booted, navigate to the "Instances" page in the User or Admin GUI
-     and click into the instance "Details" tab. Note the row of small icons shows (the rightmost)
-     one that looks like ">_". Hover the mouse over the icon and a pop-up label should appear:
+## 06. Once the guest VM is fully booted, navigate to the "Instances" page in the User or Admin GUI and click into the instance "Details" tab.
+
+  Note the row of small icons shows (the rightmost) one that looks like ">_". Hover the mouse over the icon and a pop-up label should appear:
+
      "View console". To access the guest VM, click on the icon and a new browser window should appear
      and indicate it is attempting to connect to the guest VM via the Console Proxy system VM IP.
      If the browser app. is running on the hypervisor host. or some other host that has unrestricted
@@ -480,9 +478,10 @@
      Presumably closing and re-opening the Console Proxy browser window will load the new version, but if not,
      clear the browser internal cache and retry.
 
-  ## 07. Once launched, the VM life-cycle is somewhat independent of the cloudstack services. Stopping the
-    hypervisor agent and/or the managment server does not stop the VMs. VMs can be be shutdown or rebooted
-    or destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Remember
+  ## 07. Once launched, the VM life-cycle is somewhat independent of the cloudstack services.
+
+    Stopping the hypervisor agent and/or the managment server does not stop the VMs. VMs can be be shutdown or
+    rebootedor destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Note
     that libvirtd dynamically inserts new VM routing rules in iptables, but doe not persist the rules to /etc.
     If one restarts iptables with the VMs still running, but without first saving/persisting their iptable
     entries, connectivity may be lost. Rebooting the VMs should induce libvirtd to (re)create the iptable rules
