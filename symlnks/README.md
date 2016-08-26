@@ -1,1 +1,0 @@
-/Users/david.hon/giticbr/day-to-day/2016/07/5169/cs_checklist.md
