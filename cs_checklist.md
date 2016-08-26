@@ -169,7 +169,7 @@
   * Rebooting with the Secondary Storage VM up-n-running can hang NFS, due to mounts being "busy", and
     starting NFS at host boot can also be problematic (especially if /etc/fstab indicates NFS mounts).
     Consequently it is safer to disable many of the cloudstack service deps. After a clean reboot:
-
+    <pre>
       chkconfig --list|egrep -i 'aud|cloud|iptab|virt|dnsm|mysq|network|nscd|ntp|nfs|bind|tomc'
       auditd         	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
       cloudstack-agent	      0:off	1:off	2:off	3:off	4:off	5:off	6:off
@@ -188,32 +188,32 @@
       ntpdate        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
       rpcbind        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
       virt-who       	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
+   </pre>
 
-      The above hopefully ensured a fast / simple boot-up. One must then manually
-      "service name start" of the items listed above that indicate "off".
-      Notice that libvirtd should be up immediately after reboot, but any subsequent
-      edit of /etc/libvirt* conf. files will require a restart. It's worth
-      checking the default libvirtd (KVM) boot status:
+    The above hopefully ensured a fast / simple boot-up. One must then manually
+    "service name start" of the items listed above that indicate "off".
+    Notice that libvirtd should be up immediately after reboot, but any subsequent
+    edit of /etc/libvirt* conf. files will require a restart. It's worth
+    checking the default libvirtd (KVM) boot status:
 
-      ** virsh list ; virsh pool-list ; virsh net-list
+    + virsh list ; virsh net-list ; virsh pool-list
 
       The 1st list should show any running VMs.
 
       There should be a "default" network and but no running VMs, unless
       somehow the cloudstack services were started on boot.
 
-      If there are pools, check if the pools have volumes:
+    If there are pools, check if the pools have volumes:
 
-      ** virsh vol-list any-pool-Id-shown
+    + virsh vol-list any-pool-Id-shown
 
-      Below there are some check-list items for using virsh to flush / remove
-      any lingering cloudstack remnants, if desired.
-
+    Below there are some check-list items for using virsh to flush / remove
+    any lingering cloudstack remnants, if desired.
 
   * Before a reboot, double check /etc/rc.local:
 
-    c8-13:/etc/rc.local -- ip addr add 172.16.10.2/24 brd + dev cloudbr0
-    c8-14:/etc/rc.local -- ?
+    + c8-13:/etc/rc.local -- ip addr add 172.16.10.2/24 brd + dev cloudbr0
+    + c8-14:/etc/rc.local -- ?
 
   * After a reboot, check the route table and network config (route -n, ifconfig, etc.). We need to decide if the default boot-up should enable the public / campus VLAN 989 tag.
 
