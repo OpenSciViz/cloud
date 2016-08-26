@@ -114,7 +114,7 @@
   ### e.) Another edit to consider in agent.properties is the "use local storage", ensuring that guest VM image files are placed in the standard location /var/lib/libvirt/images.
 
 
-# B. Other system config. /etc/... /mnt/... (the latter is NFS) files that must be modified to properly support cloudstack
+# B. Other system config. /etc... /mnt... (the latter for NFS, not external drives) files for cloudstack
 
 ## 000. The Quick Installation Guide (see URL refs. above) indicates these minimal edits:
   ### a.) edit /etc/exports to provide 2 NFS mounts ( and mkdir /mnt/{primary,secondary} ):
@@ -483,7 +483,7 @@
      If the only network route to the guest VM is the hypervisor host, viewing the VM console via the
      cloudstack wep-app User or Admin browser interface requires running the browser directly on the
      hypervisor bare-metal OS, via X11 forwarding. Consequently some X11 (client) deps. must be installed,
-     and the sshd config. must support the forwarding. The X11 client package install (yum/rpm) may result
+     and the sshd config. must support the forwarding. An X11 client package install (yum/rpm) may result
      in NetworManager being installed and started. The NetworkMager service may interfere with the network
      config that has been manually created. It seems best to disable NetworkManager, and remove it altogether.
 
@@ -508,9 +508,9 @@
 
   ## 07. Once launched, the VM life-cycle is somewhat independent of the cloudstack services.
 
-    Stopping the hypervisor agent and/or the managment server does NOT stop the VMs. VMs can be be shutdown or
-    rebooted or destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Note
-    that libvirtd dynamically inserts new VM routing rules in iptables, but does not persist the rules to /etc.
+    Stopping the hypervisor agent and/or the managment server does not stop the VMs. VMs can be be shutdown or
+    rebootedor destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Note
+    that libvirtd dynamically inserts new VM routing rules in iptables, but doe not persist the rules to /etc.
     If one restarts iptables with the VMs still running, but without first saving/persisting their iptable
     entries, connectivity may be lost. Rebooting the VMs should induce libvirtd to (re)create the iptable rules
     for the (NAT and masquerade, etc). But it is recommended to manually persisit the iptables rules after
