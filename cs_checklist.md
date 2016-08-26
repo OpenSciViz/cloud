@@ -268,8 +268,9 @@
 
 ## 01. One may wish to edit the log4j XML config. files to increase log-levels to DEBUG or TRACE:
 
-  ### /etc/cloudstack/agent/log4j-cloud.xml
-  ### /etc/cloudstack/management/log4j-cloud.xml
+  ### a.) /etc/cloudstack/agent/log4j-cloud.xml
+
+  ### b.) /etc/cloudstack/management/log4j-cloud.xml
 
 ## 02. Start the management service: service cloudstack-management start && tail -f /var/log/cloudstack/management/management-server.log
 
@@ -298,29 +299,42 @@
   initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting a Global Settings
   item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
 
-    ### a.) CIDRs -- management server network, control network, guest VM
-    ### b.) Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
-    ### c.) Hypervisor.list -- just KVM
-    ### d.) Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
+  ### a.) CIDRs -- management server network, control network, guest VM
+
+  ### b.) Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
+
+  ### c.) Hypervisor.list -- just KVM
+
+  ### d.) Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
             If not properly set, the secondary storage VM will fail.
-    ### d.) System.vm.use.localstorage -- true
-    ### e.) System.vm.default.hypervisor -- KVM
-    ### f.) *.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
-    ### g.) ???
+
+  ### d.) System.vm.use.localstorage -- true
+
+  ### e.) System.vm.default.hypervisor -- KVM
+
+  ### f.) *.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
+
+  ### g.) ???
 
 ## 07. Remember, in general any Global Settings change requires a restart of cloudstack-management.
 
   ###  4.8 seldom stops on the first try, but usually on the 2nd; and before starting it, be sure to restore /usr/share/cloudstack-common/vms/systemvmiso from its (correct) backup.
 
-  ### 4.9 restarts are much better behaved. Also, there may be restart glitches ...
+  ### 4.9 restarts are much better behaved, but it is better to perform a stop then a start than a restart.
 
-  ### a.) make sure the proper default gateway is setup in the route table
-  ### b.) make sure /var/log/cloudstack permissions are open
-  ### c.) make sure /root/.ssh/*rsa* permissions are open
-  ### d.) make sure /etc/cloudstack/{agent,management} properties and xml files are correct
-  ### e.) make sure /usr/share/cloudstack-common/vms/systemvm.iso is intact (4.8: ~69M or 4.9: ~76M)
-  ### f.) make sure /mnt/{secodary,primary} are mounted rw.
-  ### g.) see the unlock.sh script -- selinux and chmod and?
+    #### a.) make sure the proper default gateway is setup in the route table
+
+    #### b.) make sure /var/log/cloudstack permissions are open
+
+    #### c.) make sure /root/.ssh/*rsa* permissions are open
+
+    #### d.) make sure /etc/cloudstack/{agent,management} properties and xml files are correct
+
+    #### e.) make sure /usr/share/cloudstack-common/vms/systemvm.iso is intact (4.8: ~69M or 4.9: ~76M)
+
+    #### f.) make sure /mnt/{secodary,primary} are mounted rw.
+
+    #### g.) see the unlock.sh script -- selinux and chmod and?
 
 # D. System VM Patches and Early-Config -- once the admin GUI "Infrastructure" shows 2 System VMs
 
@@ -367,6 +381,7 @@
   It may be necessary to modify /etc/ssh/sshd_conf and /etc/iptables/rules.v4 then restart each:
 
   ### a.) service ssh restart
+
   ### b.) service iptables-persistent restart
 
 ## 04. Each fully patched system VM should have a verification test script one can run:
@@ -455,12 +470,19 @@
   There are 8 steps to the "Add Instance" action:
 
   ### a.) Setup -- zone and ISO or Template buttons
+
   ### b.) Select -- specific ISO or Template (qcow2 image for KVM hypervisor) from "Featured" or other tab.
+
   ### c.) Compute Offering -- small or medium (RAM, CPUs, etc.)
+
   ### d.) Disk Offering == small, medium, large, custom, etc.
+
   ### e.) Affinity -- no affinity groups are defined when there is only 1 hypervisor host on 1 cluster (our only possible affinity).
+
   ### f.) Network -- in "basic networking" config there is only 1 network choice ("default")
+
   ### g.) SSH KeyPair -- none; each guest VM should ultimately establish unique pairs per user.
+
   ### h.) Review and Launch -- provide an optional name for the instance.
 
 ## 03. Navigate back to the GUI "Instances" page and refresh it a few time to observer the table of instances update and eventually show its dynamically allocated IP address and its "State" become green "Running".
