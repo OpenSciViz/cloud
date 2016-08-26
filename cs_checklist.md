@@ -503,12 +503,12 @@ Note the row of small icons shows (the rightmost) one that looks like ">_". Hove
     Presumably closing and re-opening the Console Proxy browser window will load the new version, but if not,
     clear the browser internal cache and retry.
 
-  8. Once launched, the VM life-cycle is somewhat independent of the cloudstack services.
+8. Once launched, the VM life-cycle is somewhat independent of the cloudstack services.
 
-    Stopping the hypervisor agent and/or the managment server does not stop the VMs. VMs can be be shutdown or
-    rebootedor destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Note
-    that libvirtd dynamically inserts new VM routing rules in iptables, but doe not persist the rules to /etc.
-    If one restarts iptables with the VMs still running, but without first saving/persisting their iptable
-    entries, connectivity may be lost. Rebooting the VMs should induce libvirtd to (re)create the iptable rules
-    for the (NAT and masquerade, etc). But it is recommended to manually persisit the iptables rules after
-    each new VM is launched, ensuring iptables restarts yield consistent outcomes.
+  Stopping the hypervisor agent and/or the managment server does not stop the VMs. VMs can be be shutdown or
+  rebootedor destroyed and expunged from the GUI, and as mentioned above if necessary via virsh commands. Note
+  that libvirtd dynamically inserts new VM routing rules in iptables, but doe not persist the rules to /etc.
+  If one restarts iptables with the VMs still running, but without first saving/persisting their iptable
+  entries, connectivity may be lost. Rebooting the VMs should induce libvirtd to (re)create the iptable rules
+  for the (NAT and masquerade, etc). But it is recommended to manually persisit the iptables rules after
+  each new VM is launched, ensuring iptables restarts yield consistent outcomes.
