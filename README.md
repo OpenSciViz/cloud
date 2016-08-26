@@ -5,15 +5,15 @@
 
 # Refs
 
-  ## At a minimum, follow the official installation-n-config guides; and each doc includes two must-read sections entitled:
+## At a minimum, follow the official installation-n-config guides; and each doc includes two must-read sections entitled:
      "Quick Installation Guide for CentOS6" and "Host KVM Installation".
 
-  ## Release 4.9
+## Release 4.9
      http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.9/hypervisor/kvm.html
      and http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.9/qig.html
      and http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.9
 
-  ## Release 4.8
+## Release 4.8
      http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.8/hypervisor/kvm.html
      and http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.8/qig.html
      and http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.8/
@@ -22,7 +22,7 @@
   only 1 hit -- http://docs.cloudstack.apache.org/projects/cloudstack-installation/en/4.9/hypervisor/xenserver.html?highlight=uuid
   See the below's agent.properties discussion
 
-  ## While this is an OpenStack doc. the VLAN and other sections apply to Cloudstack:
+## While this is an OpenStack doc. the VLAN and other sections apply to Cloudstack:
     http://docs.openstack.org/mitaka/networking-guide/intro-basic-networking.html#vlans
 
   ## And here is more on the Cloudstack VM network subsystem (somewhat corresponding to OpenStack Neutron):
