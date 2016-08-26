@@ -170,24 +170,24 @@
     starting NFS at host boot can also be problematic (especially if /etc/fstab indicates NFS mounts).
     Consequently it is safer to disable many of the cloudstack service deps. After a clean reboot:
     <pre>
-      chkconfig --list|egrep -i 'aud|cloud|iptab|virt|dnsm|mysq|network|nscd|ntp|nfs|bind|tomc'
+    chkconfig --list|egrep -i 'aud|cloud|iptab|virt|dnsm|mysq|network|nscd|ntp|nfs|bind|tomc'
       auditd                  0:off	1:off	2:on	3:on	4:on	5:on	6:off
       cloudstack-agent        0:off	1:off	2:off	3:off	4:off	5:off	6:off
       cloudstack-ipallocator  0:off	1:off	2:off	3:off	4:off	5:off	6:off
       cloudstack-management   0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      dnsmasq        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      iptables       	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
-      libvirt-guests 	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
-      libvirtd       	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
-      mysqld         	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      network        	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
-      nfs            	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      nfslock        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      nscd           	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      ntpd           	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
-      ntpdate        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      rpcbind        	        0:off	1:off	2:off	3:off	4:off	5:off	6:off
-      virt-who       	        0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      dnsmasq                 0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      iptables                0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      libvirt-guests          0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      libvirtd                0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      mysqld                  0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      network                 0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      nfs                     0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      nfslock                 0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      nscd                    0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      ntpd                    0:off	1:off	2:on	3:on	4:on	5:on	6:off
+      ntpdate                 0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      rpcbind                 0:off	1:off	2:off	3:off	4:off	5:off	6:off
+      virt-who                0:off	1:off	2:on	3:on	4:on	5:on	6:off
    </pre>
 
     The above hopefully ensured a fast / simple boot-up. One must then manually
