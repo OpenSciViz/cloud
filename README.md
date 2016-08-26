@@ -245,11 +245,11 @@
 
     + exportfs -v
     <pre>
-      /export       	  <world>(rw,wdelay,nohide,no_root_squash,no_subtree_check,sec=sys,rw,no_root_squash,no_all_squash)
+      /export           <world>(rw,wdelay,nohide,no_root_squash,no_subtree_check,sec=sys,rw,no_root_squash,no_all_squash)
       /export/primary   <world>(rw,wdelay,nohide,insecure,root_squash,no_subtree_check,sec=sys,rw,root_squash,no_all_squash)
       /export/secondary <world>(rw,wdelay,nohide,insecure,root_squash,no_subtree_check,sec=sys,rw,root_squash,no_all_squash)
     </pre>
-    
+
   * /mnt/secondary has been seeded with the Qemu-KVM qcow2 guest VM template via:
 
     + /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://cloudstack.apt-get.eu/systemvm/4.6/systemvm64template-4.6.0-kvm.qcow2.bz2 -h lxc -F
