@@ -92,13 +92,13 @@
 
   * Create 2 uuids: uuidgen && uuidgen ... samples below ...
 
-    88bf4f6f-b542-4d71-b733-e1e0bc28542c
-    d2197860-f163-402e-8553-cce792a9cd39
+    + 88bf4f6f-b542-4d71-b733-e1e0bc28542c
+    + d2197860-f163-402e-8553-cce792a9cd39
 
   * Cut-n-paste uuids into /etc/cloudstack/agent/agent.properties (specifically):
 
-    guid=88bf4f6f-b542-4d71-b733-e1e0bc28542c
-    local.storage.uuid=d2197860-f163-402e-8553-cce792a9cd39
+    + guid=88bf4f6f-b542-4d71-b733-e1e0bc28542c
+    + local.storage.uuid=d2197860-f163-402e-8553-cce792a9cd39
 
   * Note the agent.properties file contains zone, pod, and cluster names each set to "default". If these are left as-is/unedited, one MUST specify "default" as the name for the zone, pod, and cluster setup with the Admin GUI (see below).
    Also be sure to double-check there are no typos in the zone, pod, and cluster names. The names that are present in
