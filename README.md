@@ -38,7 +38,7 @@
   Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully,
   do NOT change the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables).
 
-2. Git clone the ICBR repo. day-to-day and take a look at day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files.
+2. Git clone the day-to-day repo and take a look at day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files.
 
 3. Backup /etc/sysconfig/iptables file.
 
@@ -70,10 +70,12 @@
   * /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
   * The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
 
-      4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
-           -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
+      + 4.8: 
+        /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
+        /usr/share/cloudstack-common/vms/systemvm.zip -- scp to system VMs and unzip under /usr/local/cloud/systemvm
 
-      4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts
+      + 4.9:
+        /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts, /usr/local/cloudsystemvm also intact
 
 9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
