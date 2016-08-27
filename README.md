@@ -72,12 +72,13 @@
 
       + 4.8: 
         
-        - /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
-        - /usr/share/cloudstack-common/vms/systemvm.zip -- scp to system VMs and unzip under /usr/local/cloud/systemvm
+        - bare-metal host /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
+        - bare-metal host /usr/share/cloudstack-common/vms/systemvm.zip -- scp to system VMs and unzip under /usr/local/cloud/systemvm
 
       + 4.9:
         
-        - /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts, /usr/local/cloudsystemvm also intact
+        - bare-metal host /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts
+        - system VMs /usr/local/cloud/systemvm also intact
 
 9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
