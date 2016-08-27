@@ -340,18 +340,20 @@
 
 1. Patching 4.9 vs. 4.8
 
-  * 4.9: /usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
 
-  -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
-  The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
-  But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
-  One can virsh console into each running system VM (root password) and manually configure sshd,
-  and cut-n-paste the RSA key into /root/.ssh/*rsa*.
+/usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
 
-  * 4.8: this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty:
+  * 4.9: /usr/share/cloudstack-common/vms/systemvm.iso
+      
+    The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
+    But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
+    One can virsh console into each running system VM (root password) and manually configure sshd,
+    and cut-n-paste the RSA key into /root/.ssh/*rsa*.
 
-  -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
-  -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
+  * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
+  
+    this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty ... 
+    + host /usr/share/cloudstack-common/vms/systemvm.zip -- evidently this is what's missing
 
   Virsh console usually will not work (in 4.8) until the system VMs are more fully patched.
   Fortunately ssh via -p 3922 and scp -P 3922 to the system VM's link-local eth0 (169.254.x.y) work.
