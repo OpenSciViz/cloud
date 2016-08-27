@@ -323,7 +323,7 @@
 
 8. In general any Global Settings change requires a restart of cloudstack-management.
 
-  * 4.8 seldom stops on the first try, but usually on the 2nd; and before starting it, be sure to restore /usr/share/cloudstack-common/vms/systemvmiso from its (correct) backup.
+  * 4.8 seldom stops on the first try, but usually on the 2nd; and before starting it, be sure to restore the host /usr/share/cloudstack-common/vms/systemvm.iso from its (correct) backup.
 
   * 4.9 restarts are much better behaved, but it is better to perform a stop then a start than a restart.
 
