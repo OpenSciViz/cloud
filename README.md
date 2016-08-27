@@ -420,9 +420,11 @@
 
   Monitor the management-server.log for awhile to see the "heartbeats":
 
-    grep -i heartbeat /var/log/cloudstack/management/management-server.log|tail -2
+   * grep -i heartbeat /var/log/cloudstack/management/management-server.log|tail -2
+   <pre>
     2016-08-18 17:53:47,377 INFO  [o.a.c.f.j.i.AsyncJobManagerImpl] (AsyncJobMgr-Heartbeat-1:ctx-49311184) (logid:a4ca6d21) Begin cleanup expired async-jobs
     2016-08-18 17:53:47,381 INFO  [o.a.c.f.j.i.AsyncJobManagerImpl] (AsyncJobMgr-Heartbeat-1:ctx-49311184) (logid:a4ca6d21) End cleanup expired async-jobs
+   </pre>
 
   After a few minutes, if the above grep fails to find any heartbeats, we have a problem. But if we see heatbeats, then
   refresh (re-login) to eh Admin GUI and proceed with the agent restart:
