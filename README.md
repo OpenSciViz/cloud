@@ -96,18 +96,20 @@
 14. There is no equiv. agent setup script for /etc/cloudstack/agent/agent.properties; this must be hand edited
 
   * Create 2 uuids: uuidgen && uuidgen ... samples below ...
-
-    + 88bf4f6f-b542-4d71-b733-e1e0bc28542c
-    + d2197860-f163-402e-8553-cce792a9cd39
+    <pre>
+      88bf4f6f-b542-4d71-b733-e1e0bc28542c
+      d2197860-f163-402e-8553-cce792a9cd39
+    </pre>
 
   * Cut-n-paste uuids into /etc/cloudstack/agent/agent.properties (specifically):
-
-    + guid=88bf4f6f-b542-4d71-b733-e1e0bc28542c
-    + local.storage.uuid=d2197860-f163-402e-8553-cce792a9cd39
+    <pre>
+      guid=88bf4f6f-b542-4d71-b733-e1e0bc28542c
+      local.storage.uuid=d2197860-f163-402e-8553-cce792a9cd39
+    </pre>
 
   * Note the agent.properties file contains zone, pod, and cluster names each set to "default". If these are left as-is/unedited, one MUST specify "default" as the name for the zone, pod, and cluster setup with the Admin GUI (see below).
-   Also be sure to double-check there are no typos in the zone, pod, and cluster names. The names that are present in
-   the agent.properties files MUST be CONGRUENT with the names entered in the Admin GUI dialogues.
+    Also be sure to double-check there are no typos in the zone, pod, and cluster names. The names that are present in
+    the agent.properties files MUST be CONGRUENT with the names entered in the Admin GUI dialogues.
 
   * The simplest edit of the agent.properties file would be just the 2 uuids. This would induce the agent to look at the host network config for NICs (but it ignores bridges). It does not create bridges, expecting to find "cloudbr0" and optionally "cloudbr1". But it will create 3 or 4 vNICs for each system VM and vNIC for each guest VM which it attaches to the bridge(s).
   Even when one edits the agent.properties, the agent proceeds with "cloudbr0" and possibly "cloudbr1". For our single host setup a single bridge suffices, so consider editing all bridge entries in agent.properties to == cloudbr0.
