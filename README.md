@@ -121,13 +121,16 @@
 ## The Quick Installation Guide (see URL refs. above) indicates these minimal edits:
 
 1. edit /etc/exports to provide 2 NFS mounts ( and mkdir /mnt/{primary,secondary} ):
-
-  * grep -v \# /etc/exports
-    /                  *(rw,fsid=0)
-    /export            *(rw,nohide,sync,no_root_squash,no_subtree_check)
-    /export/primary    *(rw,nohide,sync,insecure,no_subtree_check)
-    /export/secondary  *(rw,nohide,sync,insecure,no_subtree_check)
-  * mount -t nfs4 hostIP:/export/secondary /mnt/secondary ; mount -t nfs4 hostIP:/export/primary /mnt/primary
+   <pre>
+     grep -v \# /etc/exports
+     /                  *(rw,fsid=0)
+     /export            *(rw,nohide,sync,no_root_squash,no_subtree_check)
+     /export/primary    *(rw,nohide,sync,insecure,no_subtree_check)
+     /export/secondary  *(rw,nohide,sync,insecure,no_subtree_check)
+   </pre>
+   <pre>
+     mount -t nfs4 hostIP:/export/secondary /mnt/secondary ; mount -t nfs4 hostIP:/export/primary /mnt/primary
+   </pre>
 
 2. edit /etc/libvirt/qemu.conf:
    <pre> 
