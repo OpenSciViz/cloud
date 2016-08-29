@@ -128,22 +128,26 @@
   * mount -t nfs4 hostIP:/export/secondary /mnt/secondary ; mount -t nfs4 hostIP:/export/primary /mnt/primary
 
 2. edit /etc/libvirt/qemu.conf:
-    grep 'vnc_listen' /etc/libvirt/qemu.conf
-    vnc_listen="0.0.0.0"
-
+   <pre> 
+     grep 'vnc_listen' /etc/libvirt/qemu.conf
+     vnc_listen="0.0.0.0"
+   </pre>
 3.  edit /etc/libvirt/libvirtd.conf:
-    egrep 'listen|tcp|mdns' /etc/libvirt/libvirtd.conf | grep -v \#
-    listen_tls=0
-    listen_tcp=1
-    tcp_port="16509"
-    mdns_adv = 0
-    auth_tcp="none"
-
+    <pre>
+      egrep 'listen|tcp|mdns' /etc/libvirt/libvirtd.conf | grep -v \#
+      listen_tls=0
+      listen_tcp=1
+      tcp_port="16509"
+      mdns_adv = 0
+      auth_tcp="none"
+    </pre>
 4. edit /etc/sysconfig/libvirtd:
+   <pre>
     grep LIBVIRTD /etc/sysconfig/libvirtd | grep -v \#
     LIBVIRTD_ARGS="--listen"
+   </pre>
 
-    Once the above edits are completed: service libvirtd restart.
+   Once the above edits are completed: service libvirtd restart.
 
 ## It is IMPORTANT to note the host KVM installation indicates the NFS /mnt/secondary MUST be remain mounted at all times. Also it is IMPLIED that /mnt/secondary is a MANDATORY mount point (not /net/secondary or whatever), despite the admin GUI dialogue that prompts the user to enter whatever. So be sure to enter this mount point name without typos in the Admin GUI dialogue.
 
