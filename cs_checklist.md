@@ -300,7 +300,7 @@
   after the initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting
   a Global Settings item requires a restart (or stop-then-start) of the management-server.
   
-  * List of essential settings.
+  * List of essential Global Settings to modify (restart managmeent-server after saving):
 
     + CIDRs -- management server network, control network, guest VM
 
@@ -442,10 +442,11 @@
 
 5. Make sure to select/enable "Featured" and "Shared" in the registration dialogue.
 
-  The GUI will blink for a short while then a pop-up appears indicating success (or not). But the success indicated is premature.
-  It actually takes considerably longer for the system to make the new offering available.
-  Click thru "Add Instance" and "Template" or "ISO" and "Featured" a few times and eventually the new item will be shown in the list.
-  Sometimes a new item can appear in a tab then be removed later by the system for mysterious reasons (some I/O issure or perhaps SELinux)?
+  The GUI will blink for a short while then a pop-up appears indicating success (or not). But the success indicated
+  is premature. It actually takes considerably longer for the system to make the new offering available. 
+  Click thru "Add Instance" and "Template" or "ISO" and "Featured" a few times and eventually the new item will be
+  shown in the list. Sometimes a new item can appear in a tab then be removed later by the system for mysterious
+  reasons (some I/O issure or perhaps SELinux)?
 
 # F. Launch and Use a Guest VM
 
