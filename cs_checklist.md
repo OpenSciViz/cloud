@@ -70,14 +70,13 @@
   * /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
   * The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
 
-   <pre>
-      4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
+    + 4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
            Be sure to backup a copy of the ISO.
            -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
 
-      4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
+    + 4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
            This ISO seems intact after many restarts, so no need for a backup.
-   </pre>
+
    
 9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
