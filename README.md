@@ -506,7 +506,7 @@ Note the row of small icons shows (the rightmost) one that looks like ">_". Hove
 
   * "View console". To access the guest VM, click on the icon and a new browser window should appear
     and indicate it is attempting to connect to the guest VM via the Console Proxy system VM IP.
-    If the browser app. is running on the hypervisor host. or some other host that has unrestricted
+    If the browser app. is running on the hypervisor host or some other host that has unrestricted
     network access to the VMs, the window should display the VM's OS console. If the guest VM derives
     from a "live" ISO, the console will likely be a Desktop GUI. If the guest VM derives from an install
     ISO, the console should display a typical install (text or GUI) prompt.
