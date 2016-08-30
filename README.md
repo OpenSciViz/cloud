@@ -84,7 +84,9 @@
 
 10. The yum/rpm management post-install indicates one should manually run: /usr/bin/cloudstack-setup-management
 
-  * The above script creates and inits the mysql "cloud" db and db-account, and overwrites /etc/cloudstack/management/db.properties
+  * The above script creates and inits the mysql "cloud" db and db-account, and overwrites
+    + /etc/cloudstack/management/db.properties
+
   * The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
 
 11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
@@ -206,23 +208,22 @@
 
     The above hopefully ensured a fast / simple boot-up. One must then manually
     "service name start" of the items listed above that indicate "off".
-    Notice that libvirtd should be up immediately after reboot, but any subsequent
-    edit of /etc/libvirt* conf. files will require a restart. It's worth
-    checking the default libvirtd (KVM) boot status:
+   
+   Notice that libvirtd should be up immediately after reboot, but any subsequent
+   edit of /etc/libvirt* conf. files will require a restart. It's worth
+   checking the default libvirtd (KVM) boot status:
 
-    + virsh list ; virsh net-list ; virsh pool-list
+   * virsh list ; virsh net-list ; virsh pool-list
 
-      The 1st list should show any running VMs.
+   The 1st list should show any running VMs. There should be a "default" network and but no running VMs,
+   unless somehow the cloudstack services were started on boot.
 
-      There should be a "default" network and but no running VMs, unless
-      somehow the cloudstack services were started on boot.
+   If there are pools, check if the pools have volumes:
 
-    If there are pools, check if the pools have volumes:
+   * virsh vol-list any-pool-Id-shown
 
-    + virsh vol-list any-pool-Id-shown
-
-    Below there are some check-list items for using virsh to flush / remove
-    any lingering cloudstack remnants, if desired.
+   Below there are some check-list items for using virsh to flush / remove any lingering cloudstack remnants, 
+   if desired. See the section on forcing the hypervisor agent to create new system VMs.
 
   * Before a reboot, double check /etc/rc.local:
 
