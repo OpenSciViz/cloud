@@ -286,9 +286,14 @@
 
   * /etc/cloudstack/management/log4j-cloud.xml
 
-3. Start the management service: service cloudstack-management start && tail -f /var/log/cloudstack/management/management-server.log
+3. Start the management service:
 
-4. Navigate one's browser to the management (for a single host setup this is also the hypervisor) host URL -- http://host:8080/client
+  * service cloudstack-management start
+  * tail -f /var/log/cloudstack/management/management-server.log
+
+4. Navigate one's browser to the management (for a single host setup this is also the hypervisor) host URL:
+
+  * http://host:8080/client
 
 5. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root".
 
