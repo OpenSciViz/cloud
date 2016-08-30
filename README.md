@@ -91,9 +91,21 @@
 
 11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
 
-12. Our cs_mysql.sh bash script defines some convenient bash functions, run: init_db
+12. Our cs_mysql.sh bash script defines some convenient bash functions (dbinfo, drop_db, dump_db, etc.) run:
 
-13. init_db ensures there is a mysql cloud db-account, and /etc/cloudstack/management/db.properties contains the proper db-account and passwords
+  * init_db
+
+13. Init_db ensures there is a mysql cloud db-account, and /etc/cloudstack/management/db.properties contains the proper db-account and passwords.
+
+  Note if one wishes to re-do the initial DB configuration, simply stop the management-server and re-init the DB via:
+
+  * service cloudstack-managegment stop
+
+  * dump_db to save the current db to /var/tmp/*mysql
+
+  * drop_db to delete the cloud DB
+
+  * init_db to create the cloud DB schema and set db.properties
 
 14. There is no equiv. agent setup script for /etc/cloudstack/agent/agent.properties; this must be hand edited
 
