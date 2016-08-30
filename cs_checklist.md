@@ -208,7 +208,7 @@
     + virsh vol-list any-pool-Id-shown
 
     Below there are some check-list items for using virsh to flush / remove any
-    lingering cloudstack remnants, if desired (see the sections on forcing the
+    lingering cloudstack remnants, if desired (see the section on forcing the
     hypervisor agent to create new system VMs).
 
   * Before a reboot, double check /etc/rc.local:
@@ -279,16 +279,16 @@
 
 5. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root".
 
-  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful configs
-  have occurred when using root. Note that the setup script mentioned above creates a so-called "password-locked" account
-  "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the cloud account a password and try
-  using it for adding a host to a cluster. Also note that adding a host to a cluster requires the cloudstack-agent service
-  to be started and fully initialized and communicating with both the management service and libvirtd. If one has restarted
-  the management service after editing the Global Settings (see below), with the hypervisor agent up, the agent will usually
-  reconnect gracefully. If the agent is not up, the next time one attempts to use the management service Admin GUI to add
-  a host to a cluster, the management server may attempt to start the agent (assuming it is configured to run on the same host),
-  but that can take awhile, and it's quicker to manually start the agent once the "heartbeats" appear in the management
-  server log.
+  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful
+  configs have occurred when using root. Note that the setup script mentioned above creates a so-called
+  "password-locked" account "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the 
+  cloud account a password and try using it for adding a host to a cluster. Also note that adding a host to a
+  cluster requires the cloudstack-agent service to be started and fully initialized and communicating with both
+  the management service and libvirtd. If one has restarted the management service after editing the Global Settings
+  (see below), with the hypervisor agent up, the agent will usually reconnect gracefully. If the agent is not up,
+  the next time one attempts to use the management service Admin GUI to add a host to a cluster, the management server
+  may attempt to start the agent (assuming it is configured to run on the same host), but that can take awhile, and
+  it's quicker to manually start the agent once the "heartbeats" appear in the management server log.
 
 6. Check the /var/log/cloudstack/agent/agent.log -- it it does not exist or is empty, one may start the agent manually:
 
@@ -296,26 +296,27 @@
 
 7. Global Settings are IMPORTANT -- navigate to the left-side-bar of the Admin GUI and click "Global Settings" (directly under "Infrastructure").
 
-  A very large (but searchable) table of configuration items is presented. Many of these items must be manually set after the
-  initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting a Global Settings
-  item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
+  A very large (but searchable) table of configuration items is presented. Many of these items must be manually set
+  after the initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting
+  a Global Settings item requires a restart (or stop-then-start) of the management-server.
+  
+  * List of essential settings.
 
-  * CIDRs -- management server network, control network, guest VM
+    + CIDRs -- management server network, control network, guest VM
 
-  * Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
+    + Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
 
-  * Hypervisor.list -- just KVM
+    + Hypervisor.list -- just KVM
 
-  * Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
-    If not properly set, the secondary storage VM will fail.
+    + Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template     download servers". If not properly set, the secondary storage VM will fail.
 
-  * System.vm.use.localstorage -- true
+    + System.vm.use.localstorage -- true
 
-  * System.vm.default.hypervisor -- KVM
+    + System.vm.default.hypervisor -- KVM
 
-  * \*.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
+    + \*.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
 
-  * ???
+    + ???
 
 8. In general any Global Settings change requires a restart of cloudstack-management.
 
