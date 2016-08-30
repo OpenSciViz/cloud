@@ -70,16 +70,22 @@
   * /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
   * The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
 
-      4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
+   <pre>
+      4.8: -rw-------. 1 root  root  70M Jul 14 15:02 /usr/share/cloudstack-common/vms/systemvm.iso
+           Be sure to backup a copy of the ISO.
            -rw-rw-rw-. 1 cloud cloud 69M Jan 30  2016 /usr/share/cloudstack-common/vms/systemvm.zip
 
-      4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts
-
+      4.9: -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
+           This ISO seems intact after many restarts, so no need for a backup.
+   </pre>
+   
 9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
 10. The yum/rpm management post-install indicates one should manually run: /usr/bin/cloudstack-setup-management
 
-  * The above script creates and inits the mysql "cloud" db and db-account, and overwrites /etc/cloudstack/management/db.properties
+  * The above script creates and inits the mysql "cloud" db and db-account and overwrites                               
+    /etc/cloudstack/management/db.properties
+
   * The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
 
 11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
@@ -261,9 +267,9 @@
   * One has run the unlock.sh script to ensure the cloudstack services have full access to the file-system. this sets selinux
     to permissive and chmod's certain essential items.
 
-  * The route table has been configured with the desired default gateway -- 10.a.b.1 or 10.c.d.1 or 172.16.a.1 or 172.17.b.1 ...
-
-  * The cloudbr0 bridge is up and fully configured with desired management and hypervisor host IP: brtcl show and ifconfig, etc.
+  * The route table has been configured with the desired default gateway -- 10.a.b.1 or 10.c.d.1 or 172.16.a.1 or 172.17.b.1 
+  * The cloudbr0 bridge is up and fully configured with desired management and hypervisor host IP: brtcl show and
+    ifconfig, etc.
     Note the KVM installation guide indicates two cloudstack specific bridges: cloudbr0 and cloudbr1 ... however,
     in a "basic networking" config, only cloudbr0 is needed (simpler and perhaps more efficient)
 
