@@ -366,16 +366,21 @@
 
   * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
   
-    this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty ... 
-    + host /usr/share/cloudstack-common/vms/systemvm.zip -- evidently this is what's missing
+      this ISO is smaller and its (Debial sysem VM) /usr/local/cloud/systemvm is nearly empty ... 
+
+     + (KVM host) /usr/share/cloudstack-common/vms/systemvm.zip -- evidently this is what's missing
 
   Virsh console usually will not work (in 4.8) until the system VMs are more fully patched.
-  Fortunately ssh via -p 3922 and scp -P 3922 to the system VM's link-local eth0 (169.254.x.y) work.
+  Fortunately ssh via -p 3922 and scp -P 3922 to the system VM's link-local eth0 (169.254.x.y) works.
 
-  scp /usr/share/cloudstack-common/vms/systemvm.zip into each system VM (/var/tmp) and then
-  ssh login and unzip into either /usr/local/cloud/systemvm or /opt/cloud/systemvm and sym-link
-  one to the other. Then run: service cloud-early-config (re)start and service (re)start and
-  check /var/log/cloud.log for any errors, etc.
+   + scp /usr/share/cloudstack-common/vms/systemvm.zip into each system VM (/var/tmp) and then
+  
+   + ssh login and unzip into either /usr/local/cloud/systemvm or /opt/cloud/systemvm and sym-link
+      one to the other. Then run:
+      
+   + service cloud-early-config (re)start and service (re)start and
+  
+   + tail -f /var/log/cloud.log for any errors, etc.
 
   Once /usr/local/cloud/systemvm/* files are installed, (re)run / (re)start the cloud services:
 
