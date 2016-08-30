@@ -207,8 +207,9 @@
 
     + virsh vol-list any-pool-Id-shown
 
-    Below there are some check-list items for using virsh to flush / remove
-    any lingering cloudstack remnants, if desired.
+    Below there are some check-list items for using virsh to flush / remove any
+    lingering cloudstack remnants, if desired (see the sections on forcing the
+    hypervisor agent to create new system VMs).
 
   * Before a reboot, double check /etc/rc.local:
 
@@ -217,9 +218,9 @@
 
   * After a reboot, check the route table and network config (route -n, ifconfig, etc.). We need to decide if the default boot-up should enable the public / campus VLAN 989 tag.
 
-    But there must be a default gateway in the route table, otherwise the the cloudstack-management service will fail to startup
-    (with very obscure error logs). Once the cloudstack system has been configured with a specific default gateway in the route table,
-    changing the default gateway seems to cause problems for cloudstack-management.
+    But there must be a default gateway in the route table, otherwise the the cloudstack-management service will fail
+    to startup (with very obscure error logs). Once the cloudstack system has been configured with a specific default
+    gateway in the route table, changing the default gateway seems to cause problems for cloudstack-management.
 
   * Various and sundry files under /etc that have been touched during the cloudstack eval (attempting to configure as sudoer rather than root):
 
