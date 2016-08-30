@@ -385,8 +385,10 @@
   Once /usr/local/cloud/systemvm/* files are installed, (re)run / (re)start the cloud services:
 
   * service cloud-early-config restart -- this may cause a reboot of the VM
+
   * service cloud restart -- check /var/log/cloud.log for errors, exceptios, etc:
-    egrep -i 'abor|canno|erro|excep|fail|fata|unable' /var/log/cloud.log
+
+    + egrep -i 'abor|canno|erro|excep|fail|fata|unable' /var/log/cloud.log
 
 2. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to be refreshed manually to observe changes in state/status of the system VMs.
 
@@ -396,14 +398,15 @@
   any virtual-router VM, and i-*-VM for any guest VMs. The virtual router VM (r-*-VM) does not
   appear to be created and booted by the system until one attempts to launch a guest VM.
 
-4. Note the system VMs are Debian 7 (wheezy) and are running sshd and iptables. It may be necessary to modify /etc/ssh/sshd_conf and /etc/iptables/rules.v4 then restart each:
+4. Note the system VMs are Debian 7 (wheezy) and are running sshd and iptables. It may be necessary to modify   /etc/ssh/sshd_conf and /etc/iptables/rules.v4 then restart each:
 
   * service ssh restart
+
   * service iptables-persistent restart
 
 5. Each fully patched system VM should have a verification test script one can run:
 
-  /usr/local/cloud/systemvm/ssvm-check.sh
+  * /usr/local/cloud/systemvm/ssvm-check.sh
 
   In order for the ssvm-check script to work fully, however, the VM needs access to the Internet.
   The network config. across the host and the system VMs needs to be setup to allow access to the
@@ -435,7 +438,7 @@
 
   Optionally copy/backup the current log files and then "truncate -s 0" all logs and restart the services:
 
-    service cloudstack-management start
+  * service cloudstack-management start
 
   Monitor the management-server.log for awhile to see the "heartbeats":
 
@@ -449,11 +452,11 @@
   refresh (re-login) to eh Admin GUI and proceed with the agent restart:
 
   * service cloudstack-agent start -- and after many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
-  * Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change to green "Running".
 
-      Note their names and IPs.
+  * Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change to green "Running". Note their names and IPs.
 
   * Try to virsh console into each VM-name, or ssh -P 3922 into each VM's link-local IP.
+
   * If one can login as root (password), check the contents of each VM's /usr/local/cloud/systemvm
 
 # E. Registration of Templates (qcow2 images) and ISOs.
@@ -516,22 +519,23 @@ Note the row of small icons shows (the rightmost) one that looks like ">_". Hove
 
   * Note there is known bug in the cloudstack console poxy, as described here:
 
-    https://issues.apache.org/jira/browse/CLOUDSTACK-9164
+     + https://issues.apache.org/jira/browse/CLOUDSTACK-9164
 
-    The above describes a manual patch for the console's "ajaxviewer.js" that should be found in the VM's
-    /usr/local/cloud/systemvm/js sub-directory.
+   The above describes a manual patch for the console's "ajaxviewer.js" that should be found in the VM's
+   
+     + /usr/local/cloud/systemvm/js sub-directory.
 
-    Copy (scp) the patchfile (prevent_quick_search_key.patch) to the hypervisor host from the git cloned
-    directory that also contains this cs_checklist.txt. Then on the hypervisor copy (scp -P 3922) the
-    patchfile to the Console Proxy System VM: /usr/local/cloud/systemvm/js. Then ssh or virsh console to
-    the VM and pushd there to perform the patch:
+   Copy (scp) the patchfile (prevent_quick_search_key.patch) to the hypervisor host from the git cloned
+   directory that also contains this cs_checklist.txt. Then on the hypervisor copy (scp -P 3922) the
+   patchfile to the Console Proxy System VM: /usr/local/cloud/systemvm/js. Then ssh or virsh console to
+   the VM and pushd there to perform the patch:
 
-    + cp -p ajaxviewer.js ajaxviewer.js.orig
-    + patch < prevent_quick_search_key.patch
-    + diff ajaxviewer.js ajaxviewer.js.orig
+     + cp -p ajaxviewer.js ajaxviewer.js.orig
+     + patch < prevent_quick_search_key.patch
+     + diff ajaxviewer.js ajaxviewer.js.orig
 
-    Presumably closing and re-opening the Console Proxy browser window will load the new version, but if not,
-    clear the browser internal cache and retry.
+   Presumably closing and re-opening the Console Proxy browser window will load the new version, but if not,
+   clear the browser internal cache and retry.
 
 8. Once launched, the VM life-cycle is somewhat independent of the cloudstack services.
 
