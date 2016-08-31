@@ -251,9 +251,9 @@
   * Various and sundry files under /etc that have been touched during the cloudstack eval (attempting to configure as sudoer rather than root):
 
     + /etc/audit\* -- selinux audit rules
-    + /etc/init.d/cloudstack\* -- startuo scripts
+    + /etc/init.d/cloudstack\* -- startup scripts
     + /etc/libvirt\* -- conf user, group, tcp, etc.
-    + /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} -- ipv4 forwarding, NFS, KVM, non-krb5 ssh logins
+    + /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} -- ipv4 forwarding, NFS, KVM-libvirt ...
     + /etc/modprobe.d/ipv6.conf -- comment all lines out (ala Sir Alex)
     + /etc/polkit\* -- libvirt users
     +  /etc/security/\* -- non-krb5 logins
@@ -281,8 +281,8 @@
 
     + /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://cloudstack.apt-get.eu/systemvm/4.6/systemvm64template-4.6.0-kvm.qcow2.bz2 -h lxc -F
 
-    Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
-    the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
+   Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
+   the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
 
   * One has run the unlock.sh script to ensure the cloudstack services have full access to the file-system. this sets selinux
     to permissive and chmod's certain essential items.
