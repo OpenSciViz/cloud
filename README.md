@@ -331,18 +331,18 @@
   initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting a Global Settings
   item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
 
-  * CIDRs -- management server network, control network, guest VM
+  * CIDRs -- management server network, control network, guest VM ... also the CIDRs for secondary storage (see below)
 
   * Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
 
   * Hypervisor.list -- just KVM
+   
+  * System.vm.default.hypervisor -- KVM
 
   * Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
     If not properly set, the secondary storage VM will fail.
 
   * System.vm.use.localstorage -- true
-
-  * System.vm.default.hypervisor -- KVM
 
   * \*.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
 
