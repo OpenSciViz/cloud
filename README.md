@@ -327,20 +327,31 @@
 
 7. Global Settings are IMPORTANT -- navigate to the left-side-bar of the Admin GUI and click "Global Settings" (directly under "Infrastructure").
 
-  A very large (but searchable) table of configuration items is presented. Many of these items must be manually set after the
-  initial management serivce startup, before starting the hypervisor agent service. In most cases, (re)setting a Global Settings
-  item requires a restart (or stop-then-start) of the management-server. List of essential seetings.
+  A very large (but searchable) table of configuration items is presented. Many of these items must be manually set
+  after the initial management serivce startup, before starting the hypervisor agent service. In most cases,
+  (re)setting a Global Settings item requires a restart (or stop-then-start) of the management-server.
+  
+  List of essential seetings:
 
   * CIDRs -- management server network, control network, guest VM ... also the CIDRs for secondary storage (see below)
 
-  * Host -- management server host IP ... things are better behaved when this is on the same subnet as the system VMs.
+    The most reliable / functional configuration seems to be a single sunbent for everthing. Consequently, be sure to
+    to use the same CIDR and for all but the contro network (which is the link-local 169.254.0.0/16). So the
+    management and storage servers IPs, hypervisor host agent IPs, system VMs (private and public IPs) and guest VMs IPs
+    shoukd all reside on the same subnet (10.101.12.0/24 or 172.17.8.0/24, etc.).
+
+  * Host -- management server (MS) host IP. Again, things are better behaved when this is on the same subnet as the system VMs.
+
+    Important -- make sure the sysytem VM (manual) patch edit has the proper MS host IP in /var/cache/cloud/cmd\* ... See
+    the patch section below.
 
   * Hypervisor.list -- just KVM
    
   * System.vm.default.hypervisor -- KVM
 
   * Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
-    If not properly set, the secondary storage VM will fail.
+
+    If not properly set, the secondary storage VM will fail. This should be consistent (same subnet) with all CIDRs.
 
   * System.vm.use.localstorage -- true
 
@@ -366,9 +377,13 @@
 # D. System VM Patches and Early-Config -- once the admin GUI "Infrastructure" shows 2 System VMs
 
 1. Patching 4.9 vs. 4.8
+  
+  As noted above, CIDRs and MS host IPs sould be consistent across all the moving parts. For example,
+  if one sets the MS host IP via the Admin GUI Global Settings to 172.17.8.94, be sure the system VMs
+  use that IP. Find the MS host IP setting in the system VMs under /var/cache/cloud/cmd\* files and
+  edit them with CIDR consistent IPs (172.17.8.94 in this example).
 
-
-/usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
+  Also take a look at /usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py
 
   * 4.9: /usr/share/cloudstack-common/vms/systemvm.iso
       
@@ -379,7 +394,7 @@
 
   * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
   
-      this ISO is smaller and its (Debial sysem VM) /usr/local/cloud/systemvm is nearly empty ... 
+    This ISO is smaller and its (Debial sysem VM) /usr/local/cloud/systemvm is nearly empty ... 
 
      + (KVM host) /usr/share/cloudstack-common/vms/systemvm.zip -- evidently this is what's missing
 
@@ -439,7 +454,8 @@
   * service cloudstack-agent stop ; service cloudstack-management stop
 
   * virsh list -- note VM names, if any are shown and try:
-    virsh shutdown each-VM-name -- or destroy or undefine
+
+    + virsh shutdown each-VM-name -- or destroy or undefine
 
   * virsh pool-list -- and note any/all the pool Ids
 
