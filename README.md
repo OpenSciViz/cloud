@@ -218,8 +218,11 @@
       virt-who                0:off	1:off	2:on	3:on	4:on	5:on	6:off
    </pre>
 
-    The above hopefully ensured a fast / simple boot-up. One must then manually
-    "service name start" of the items listed above that indicate "off".
+    The above hopefully ensured a fast / simple boot-up. One must then manually "service name start" (some) of the
+    items listed above that indicate "off". In fact two of the daemons should remain "off" -- dnsmasq and nscd.
+    Evidently libvirtd spawns dnsmasq, which it needs, but if dnsmasq is alreay up when libvirtd attempts to
+    spawn it, the cloudstack hyoervisor agent can get confused. Also, since dnsmasqd can cache DNS entries, avoid
+    potential cache conflicts by keeping nscd off (the other DNS cache daemon) ...
    
    Notice that libvirtd should be up immediately after reboot, but any subsequent
    edit of /etc/libvirt* conf. files will require a restart. It's worth
