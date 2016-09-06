@@ -30,9 +30,8 @@ function sebools {
   setsebool -P allow_mount_anyfile on
 
   setsebool -P httpd_use_nfs on
-  setsebool -P rsync_use_nfs on
-
   setsebool -P qemu_use_nfs on
+  setsebool -P rsync_use_nfs on
   setsebool -P virt_use_nfs on
   setsebool -P virt_use_xserver on
 }
@@ -88,14 +87,20 @@ function selinux {
   sebools -v
   seports -v
 
-  semanage permissive -a mount_t
   semanage permissive -a dnsmasq_t
+  semanage permissive -a java_t
+  semanage permissive -a mount_t
+  semanage permissive -a mysqld_t
+  semanage permissive -a nfsd_t
   semanage permissive -a qemu_t
   semanage permissive -a virtd_t
-  semanage permissive -a java_t
-  semanage permissive -a mysqld_t
+
   echo make sure selinux allows mysql i/o:
+  semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
   semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
+
+  echo make sure selinux allows nfs rw:
+  semanage fcontext -a -t nfsd_rw_t "/export/*"
 
   restorecon -rv /
 }
