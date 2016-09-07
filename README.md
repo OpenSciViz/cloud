@@ -35,32 +35,39 @@
 
 1. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges, tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
 
-  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully,
-  do NOT change the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables).
+  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables) may be problematic. Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc.) 
 
-2. Git clone the day-to-day repo and take a look at day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files.
+2. Git clone the day-to-day repo and take a look at day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, unlocl.sh, etc.
 
 3. Backup /etc/sysconfig/iptables file.
 
   Note the ports cloudstack needs: https://cwiki.apache.org/confluence/display/CLOUDSTACK/Ports+used+by+CloudStack
   for Apache Tomcat (HTTPD), NFS, DNS, etc., and also VNC 5800-6100
 
-4. Set SELinux to Permissive: "setenforce 0". Review cs_yum_rpms.sh (do not attempt to run this pseudo bash script), and perform the indicated sets of "yum installs" and "pip installs".
+4. Set SELinux to Enforcing: "setenforce 1", if the host was not booted as such; then run scloud.sh to place selected Cloudsatck depps. permissive. Then:
 
-4. After installing all deps, make sure mysqld and NetworkManager are not running:
+  * Review cs_yum_rpms.sh (do not attempt to run this pseudo bash script), and perform the indicated sets of "yum installs" and "pip installs".
 
-  * service mysqld stop ; chkconfig mysqld off
-  * service NetworkManager stop ; chkconfig NetworkManager off
-  And consider yum remove NetworkManager.
+  *  After installing all deps, make sure MySQLd and NetworkManager are not running:
+    + service mysqld stop ; chkconfig mysqld off
+    + service NetworkManager stop ; chkconfig NetworkManager off ... And consider yum remove NetworkManager.
 
 5. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available via yum. For 4.9 it was necessary to download the new mysql-connector-python-*.rpm from:
 
-  * https://dev.mysql.com/downloads/connector/python
+  * https://dev.mysql.com/downloads/connector/python ... Update: this is now included in the yum repo. for 4.9:
+  <pre>
+  cat /etc/yum.repos.d/cloudstack.repo 
+  [cloudstack]
+  name=cloudstack
+  baseurl=http://cloudstack.apt-get.eu/centos/6/4.9/
+  enabled=1
+  gpgcheck=0
+  </pre>
 
 6. After yum/rpm of cloudstack-management and cloudstack-agent (and/or after running the setup-managment script, see below), check if they are up/running, and if so, stop them:
-
-  * service cloudstack-agent status ; service cloudstack-agent stop ; chkconfig NetworkManager off
-  * service cloudstack-management status ; service cloudstack-management stop ; chkconfig cloudstack-management off
+  * yum install cloudstack-common cloudstack-cli cloudstack-agent cloudstack-management
+  * service cloudstack-agent status ; chkconfig NetworkManager off
+  * service cloudstack-management status ; chkconfig cloudstack-management off
 
 7. yum/rpm cloudstack-cli and use python-pip for cloud(stack) modules: pip install cloudmonkey apache-libcloud
 
@@ -82,22 +89,22 @@
 
 9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
 
-10. The yum/rpm management post-install indicates one should manually run: /usr/bin/cloudstack-setup-management
+10. The yum/rpm management post-install indicates one should manually run:
 
-  * The above script creates and inits the mysql "cloud" db and db-account, and overwrites
-    + /etc/cloudstack/management/db.properties
+  * /usr/bin/cloudstack-setup-management -- creates and inits the mysql "cloud" db and db-account, and overwrites
+    /etc/cloudstack/management/db.properties
 
   * The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
+
+  * service cloudstack-management status -- indicates the above script has started the daemon. It may be a bit premature, so stop the daemon and preceed with a few other config. activities ...
 
 11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
 
 12. Our cs_mysql.sh bash script defines some convenient bash functions (dbinfo, drop_db, dump_db, etc.) run:
 
-  * init_db
+  * init_db -- ensures there is a mysql cloud db-account, and /etc/cloudstack/management/db.properties contains the proper db-account and passwords.
 
-13. Init_db ensures there is a mysql cloud db-account, and /etc/cloudstack/management/db.properties contains the proper db-account and passwords.
-
-  Note if one wishes to re-do the initial DB configuration, simply stop the management-server and re-init the DB via:
+13.  Note if one wishes to re-do the initial DB configuration, simply stop the management-server and re-init the DB via:
 
   * service cloudstack-managegment stop
 
@@ -187,10 +194,11 @@
   The c8-13 network is actually not setup with the tagged VLAN 100-300, it uses cloudbr0 with multiple
   IPs configured vi the iproute2-tools (not ifconfig-net-tools; see /etc/rc.local):
 
-    ip addr add 172.16.10.2/24 brd + dev cloudbr0
+    ip addr add 172.16.8.93/24 brd + dev cloudbr0
 
   The c8-14 network config. uses ifconfig scripts /etc/sysconfig/network-scripts/ifcfg-eth0.100,200,300
-  as described in the KVM docs., but all are assigned to the cloudbr0 bridge.
+  as described in the KVM docs., but all are assigned to the cloudbr0 bridge. Update: c8-13 will soon enjoy
+  a similar VLAN config.
 
 1. Some host system configs. and /etc file edits that seem to improve the odds of success:
 
@@ -287,8 +295,7 @@
    Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
    the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
 
-  * One has run the unlock.sh script to ensure the cloudstack services have full access to the file-system. this sets selinux
-    to permissive and chmod's certain essential items.
+  * One has run the secloud.sh scriopt and the unlock.sh script. These ensure the cloudstack services have full access to the file-system, and that SELinux is enabled/enforcing, but with selective TCP ports, file-contex, and daemons allowed "permissive".
 
   * The route table has been configured with the desired default gateway -- 10.a.b.1 or 10.c.d.1 or 172.16.a.1 or 172.17.b.1 ...
 
