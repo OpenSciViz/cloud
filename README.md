@@ -459,13 +459,16 @@
     + virsh shutdown each-VM-name -- or destroy or undefine
 
   * virsh pool-list -- and note any/all the pool Ids
+
 <pre>
 virsh pool-list
 Name                 State      Autostart 
 -----------------------------------------
 e46a7f5f-fd84-31dc-92dc-f6a77fda375a active     no        
 </pre>
+
   * virsh vol-list each-pool-name -- note all the vol-names
+
 <pre>
 virsh vol-list e46a7f5f-fd84-31dc-92dc-f6a77fda375a
 Name                 Path                                    
@@ -474,11 +477,11 @@ KVMHA                /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
 </pre>
 
   * for each vol of each pool: virsh vol-delete vol-name pool-name ... which may sometime require extra effort:
+
 <pre>
 virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
 error: Failed to delete vol KVMHA
 error: cannot remove directory '/mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA': Directory not empty
-
 rm -rf /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
 mkdir -p /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
 virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
@@ -486,20 +489,21 @@ virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
 
   * for each pool-name: virsh pool-delete pool-name
 
-  Optionally copy/backup the current log files and then "truncate -s 0" all logs and restart the services:
+  * Optionally copy/backup the current log files and then "truncate -s 0" all logs and restart the services:
 
   * service cloudstack-management start
 
   Monitor the management-server.log for awhile to see the "heartbeats":
 
    * grep -i heartbeat /var/log/cloudstack/management/management-server.log|tail -2
+
    <pre>
     2016-08-18 17:53:47,377 INFO  [o.a.c.f.j.i.AsyncJobManagerImpl] (AsyncJobMgr-Heartbeat-1:ctx-49311184) (logid:a4ca6d21) Begin cleanup expired async-jobs
     2016-08-18 17:53:47,381 INFO  [o.a.c.f.j.i.AsyncJobManagerImpl] (AsyncJobMgr-Heartbeat-1:ctx-49311184) (logid:a4ca6d21) End cleanup expired async-jobs
    </pre>
 
-  After a few minutes, if the above grep fails to find any heartbeats, we have a problem. But if we see heatbeats, then
-  refresh (re-login) to eh Admin GUI and proceed with the agent restart:
+    After a few minutes, if the above grep fails to find any heartbeats, we have a problem. But if we see heatbeats, then
+    refresh (re-login) to eh Admin GUI and proceed with the agent restart:
 
   * service cloudstack-agent start -- and after many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
 
