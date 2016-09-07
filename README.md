@@ -505,13 +505,16 @@ virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
     After a few minutes, if the above grep fails to find any heartbeats, we have a problem. But if we see heatbeats, then
     refresh (re-login) to eh Admin GUI and proceed with the agent restart:
 
-  * service cloudstack-agent start -- and after many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
+  * service cloudstack-agent start
+
+    After many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
 
   * Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change to green "Running". Note their names and IPs.
 
-  * Try to virsh console into each VM-name, or ssh -P 3922 into each VM's link-local IP.
+  * Try to virsh console into each VM-name
+    + Or ssh -i /root/.ssh/id_rsa.cloud -p 3922 into each VM's link-local IP.
 
-  * If one can login as root (password), check the contents of each VM's /usr/local/cloud/systemvm
+  * If one can login as root (password), check the contents of each VM's /usr/local/cloud/systemvm and preform any patches needed.
 
 # E. Registration of Templates (qcow2 images) and ISOs.
 
