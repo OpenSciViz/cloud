@@ -455,16 +455,34 @@
   As root shutdown the cloudstack services and invoke virsh:
 
   * service cloudstack-agent stop ; service cloudstack-management stop
-
   * virsh list -- note VM names, if any are shown and try:
-
     + virsh shutdown each-VM-name -- or destroy or undefine
 
   * virsh pool-list -- and note any/all the pool Ids
-
+<pre>
+virsh pool-list
+Name                 State      Autostart 
+-----------------------------------------
+e46a7f5f-fd84-31dc-92dc-f6a77fda375a active     no        
+</pre>
   * virsh vol-list each-pool-name -- note all the vol-names
+<pre>
+virsh vol-list e46a7f5f-fd84-31dc-92dc-f6a77fda375a
+Name                 Path                                    
+-----------------------------------------
+KVMHA                /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
+</pre>
 
-  * for each vol of each pool: virsh vol-delete vol-name pool-name
+  * for each vol of each pool: virsh vol-delete vol-name pool-name ... which may sometime require extra effort:
+<pre>
+virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
+error: Failed to delete vol KVMHA
+error: cannot remove directory '/mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA': Directory not empty
+
+rm -rf /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
+mkdir -p /mnt/e46a7f5f-fd84-31dc-92dc-f6a77fda375a/KVMHA
+virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
+</pre>
 
   * for each pool-name: virsh pool-delete pool-name
 
