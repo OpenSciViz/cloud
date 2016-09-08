@@ -345,10 +345,30 @@
   * 4.9: /usr/share/cloudstack-common/scripts/vm/hypervisor/kvm/patchviasocket.py and
 
   -rw-rw-rw-. 1 cloud cloud 76M Aug  2 03:40 /usr/share/cloudstack-common/vms/systemvm.iso
-  The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
+  
+    + Virsh console into each system VM.
+    
+    + Check the contents of /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
+    
+    + Stop the cloud daemin:
+      <pre>service cloud stop</pre>
+   
+    + Edit /var/cache/cloud/{cmdline,cmd_line.json} with the host IP and Management CIDRs one has established in the Admin GUI GLobal Settings
+    
+    + Run the early-config daemon: 
+      <pre>service cloud-early-config restart</pre>
+   
+    + Restart the cloud daemon:
+      <pre>service cloud start/pre>
+    
+    + Optiomally edit /etc/ssh/sshd_config and restart the sshd:
+      <pre>service ssh restart</pre>
+      
+    + Refresh the Admin GUI Infrastructure page and click into the System VMs page and hopefully observe the "Agent State"   column show green "Up" for each Syste VM.
+     
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
-  and cut-n-paste the RSA key into /root/.ssh/*rsa*.
+  and cut-n-paste the RSA key into the baremetal host /root/.ssh/*rsa*.
 
   * 4.8: this ISO is smaller and its /usr/local/cloud/systemvm is nearly empty:
 
