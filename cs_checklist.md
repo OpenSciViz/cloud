@@ -353,13 +353,13 @@
     + Stop the cloud daemin:
       <pre>service cloud stop</pre>
    
-    + Edit /var/cache/cloud/{cmdline,cmd_line.json} with the host IP and Management CIDRs one has established in the Admin GUI GLobal Settings
+    + Edit /var/cache/cloud/{cmdline,cmd_line.json} with the host IP and Management CIDRs one has established in the Admin GUI Global Settings
     
     + Run the early-config daemon: 
       <pre>service cloud-early-config restart</pre>
    
     + Restart the cloud daemon:
-      <pre>service cloud start/pre>
+      <pre>service cloud start</pre>
     
     + Optiomally edit /etc/ssh/sshd_config and restart the sshd:
       <pre>service ssh restart</pre>
