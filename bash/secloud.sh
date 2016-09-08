@@ -8,6 +8,8 @@
 # http://linux.die.net/man/8/libvirt_selinux
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
+# http://linux.die.net/man/8/xauth_selinux
+# 
 
 function systatus {
   \mount && \df -h
@@ -87,6 +89,7 @@ function selinux {
   sebools -v
   seports -v
 
+  echo permissive mode for dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
   semanage permissive -a dnsmasq_t
   semanage permissive -a java_t
   semanage permissive -a mount_t
@@ -94,6 +97,7 @@ function selinux {
   semanage permissive -a nfsd_t
   semanage permissive -a qemu_t
   semanage permissive -a virtd_t
+  semanage permissive -a xauth_t
 
   echo make sure selinux allows mysql i/o:
   semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
@@ -101,6 +105,10 @@ function selinux {
 
   echo make sure selinux allows nfs rw:
   semanage fcontext -a -t nfsd_rw_t "/export/*"
+
+  echo for automounted home "directories that need to be shared by NFS" ...
+  echo as described in the Gotchas section of https://wiki.centos.org/HowTos/SELinux
+  semanage fcontext -a -t public_content_rw_t "/home/*"
 
   restorecon -rv /
 }
