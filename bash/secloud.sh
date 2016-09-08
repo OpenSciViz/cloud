@@ -89,7 +89,8 @@ function selinux {
   sebools -v
   seports -v
 
-  echo permissive mode for dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
+  echo permissive mode for automount, dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
+  semanage permissive -a automount_t
   semanage permissive -a dnsmasq_t
   semanage permissive -a java_t
   semanage permissive -a mount_t
