@@ -250,7 +250,7 @@
 
   * Before a reboot, double check /etc/rc.local:
 
-    + c8-13:/etc/rc.local -- ip addr add 172.16.10.2/24 brd + dev cloudbr0
+    + c8-13:/etc/rc.local -- ip addr add 172.16.8.93/24 brd + dev cloudbr0
     + c8-14:/etc/rc.local -- ?
 
   * After a reboot, check the route table and network config (route -n, ifconfig, etc.). We need to decide if the default boot-up should enable the public / campus VLAN 989 tag.
@@ -290,8 +290,10 @@
 
   * /mnt/secondary has been seeded with the Qemu-KVM qcow2 guest VM template via:
 
-    + /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://cloudstack.apt-get.eu/systemvm/4.6/systemvm64template-4.6.0-kvm.qcow2.bz2 -h lxc -F
-
+    <pre>
+    /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://cloudstack.apt-get.eu/systemvm/4.6/systemvm64template-4.6.0-kvm.qcow2.bz2 -h lxc -F
+    </pre>
+    
    Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
    the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
 
