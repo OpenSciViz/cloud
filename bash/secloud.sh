@@ -9,7 +9,7 @@
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
 # http://linux.die.net/man/8/xauth_selinux
-# 
+# http://linux.die.net/man/8/automount_selinux 
 
 function systatus {
   \mount && \df -h
@@ -17,12 +17,12 @@ function systatus {
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
   semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
-  if [ $1 == '-v' ] ; then
-   auditctl -l
-   seinfo -t
-   semanage port -l
-   iptables -L
-   sysctl -a
+  if [ "$1" == '-v' ] ; then
+    auditctl -l
+    seinfo -t
+    semanage port -l
+    iptables -L
+    sysctl -a
   fi
 }
 
