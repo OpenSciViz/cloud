@@ -361,10 +361,10 @@
     + Restart the cloud daemon:
       <pre>service cloud start</pre>
     
-    + Optiomally edit /etc/ssh/sshd_config and restart the sshd:
+    + Optionally edit /etc/ssh/sshd_config and restart the sshd:
       <pre>service ssh restart</pre>
       
-    + Refresh the Admin GUI Infrastructure page and click into the System VMs page and hopefully observe the "Agent State"   column show green "Up" for each Syste VM.
+    + Refresh the Admin GUI Infrastructure page and click into the System VMs page and hopefully observe the "Agent State"   column show green "Up" for each System VM.
      
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
