@@ -369,7 +369,7 @@
 
   * \*.rpfilter -- when all cloudstack services run on same/single host may help to set these to 0 (false)
 
-  * ???
+  * search "max", "cpu", "stor(age)", and "over(provision)" settings and feel free to increase them.
 
 8. In general any Global Settings change requires a restart of cloudstack-management.
 
@@ -424,6 +424,9 @@
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
   and cut-n-paste the RSA key into the baremetal host /root/.ssh/id_rsa\*.
+  
+  IMPORTANT -- if the baremetal host  /etc/.ssh/id_rsa.cloud has been zero'd (presumabley bt the 4.9 hyperviser agent)
+  or is incorrect, launching VM instances will fail due to Virtual Router not booting fully ... 
 
   * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
   
@@ -451,7 +454,7 @@
 
     + egrep -i 'abor|canno|erro|excep|fail|fata|unable' /var/log/cloud.log
 
-2. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to be refreshed manually to observe changes in state/status of the system VMs.
+2. Once the system VMs have been patched, try rebooting each via the admin GUI. The GUI needs to be refreshed manually to observe changes in state/status of the system VMs. Sometimes more than one reboot is required to force the patched configuration to propogate...
 
 3. Once the System VMs are fully booted, try to virsh console into each.
 
@@ -537,14 +540,18 @@ virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
 
   * service cloudstack-agent start
 
-    After many many minutes Admin GUI Infrastructure will show 2 (new) System VMs
+    After many many minutes Admin GUI Infrastructure will show 2 (new) System VMs. Note a 3rd System VM (Virtual Router) 
+    will only appear once the first guest VM is launched.
 
-  * Click thru to the System VM page and monitor their status by refreshing the page. Eventually thet status should change to green "Running". Note their names and IPs.
+  * Click thru to the "System VMs" page and monitor their status by refreshing the page. Eventually the "VM state" column
+  should change to green "Running" and the "Agent State" column shoud show green "Up". If the "Up" is not indicated,
+  then the patch has not propogated properly (double check the edits and reboot). Note the VM names and IPs.
 
   * Try to virsh console into each VM-name
     + Or ssh -i /root/.ssh/id_rsa.cloud -p 3922 into each VM's link-local IP.
 
-  * If one can login as root (password), check the contents of each VM's /usr/local/cloud/systemvm and preform any patches needed.
+  * If one can login as root (password), check the contents of each VM's /usr/local/cloud/systemvm and optionally run
+  the ssvn-check.sh script.sh.
 
 # E. Registration of Templates (qcow2 images) and ISOs.
 
