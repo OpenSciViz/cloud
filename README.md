@@ -37,14 +37,15 @@
 
   Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables) may be problematic. Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc.) 
 
-2. Git clone the day-to-day repo and take a look at day-to-day/2016/07/{5169,CoudstackAssets} -- lots of (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, unlocl.sh, etc.
+2. Git clone this repo. and take a look at the (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, cs_yum_rpms.sh, etc.
 
 3. Backup /etc/sysconfig/iptables file.
 
   Note the ports cloudstack needs: https://cwiki.apache.org/confluence/display/CLOUDSTACK/Ports+used+by+CloudStack
   for Apache Tomcat (HTTPD), NFS, DNS, etc., and also VNC 5800-6100
 
-4. Set SELinux to Enforcing: "setenforce 1", if the host was not booted as such; then run scloud.sh to place selected Cloudsatck depps. permissive. Then:
+4. If you need to set SELinux to Enforcing, run secloud.sh to place selected Cloudsatck deps. into permissive mode.
+  Then:
 
   * Review cs_yum_rpms.sh (do not attempt to run this pseudo bash script), and perform the indicated sets of "yum installs" and "pip installs".
 
@@ -52,7 +53,7 @@
     + service mysqld stop ; chkconfig mysqld off
     + service NetworkManager stop ; chkconfig NetworkManager off ... And consider yum remove NetworkManager.
 
-5. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available via yum. For 4.9 it was necessary to download the new mysql-connector-python-*.rpm from:
+5. First install yum/rpm cloudstack-common, then the agent and management servers ... Some deps. may not be available via yum. Intitally for 4.9 it was necessary to download the new mysql-connector-python-*.rpm (although recently yum works):
 
   * https://dev.mysql.com/downloads/connector/python ... Update: this is now included in the yum repo. for 4.9:
   <pre>
