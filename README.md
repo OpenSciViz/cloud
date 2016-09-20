@@ -385,7 +385,7 @@
     + /usr/share/cloudstack-common/vms/systemvm.iso is intact (4.8: ~69M or 4.9: ~76M, restore from backup if needed)
     + /mnt/{secodary,primary} are mounted rw.
 
-   The unlock.sh script helps with the above and also a number selinux items.
+   The unlock.sh script helps with the above, as well as secloud.sh.
 
 # D. System VM Patches and Early-Config -- once the admin GUI "Infrastructure" shows 2 System VMs
 
@@ -424,10 +424,12 @@
      
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
-  and cut-n-paste the RSA key into the baremetal host /root/.ssh/id_rsa\*.
+  and cut-n-paste the RSA key into the baremetal host /root/.ssh/id_rsa\*. Note there is no Virtual Router (VR)
+  system VM initially; evidently the VR is created/booted with the very first guest VM launch.
   
-  IMPORTANT -- if the baremetal host  /etc/.ssh/id_rsa.cloud has been zero'd (presumabley bt the 4.9 hyperviser agent)
-  or is incorrect, launching VM instances will fail due to Virtual Router not booting fully ... 
+  IMPORTANT -- if the baremetal host /etc/.ssh/id_rsa.cloud has been zero'd (presumabley by the 4.9 hyperviser agent)
+  or is incorrect, launching guest VM instances will fail due to the Virtual Router not booting fully. The correct RSA
+  pem file can be copied from a running system VM's /etc/ssh/ssh_host_rsa_key.
 
   * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
   
