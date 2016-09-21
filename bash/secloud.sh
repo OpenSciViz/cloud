@@ -8,7 +8,7 @@
 # http://linux.die.net/man/8/libvirt_selinux
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
-# https://linux.die.net/man/8/sge_selinux
+# https://www.mankier.com/8/sge_execd_selinux and https://linux.die.net/man/8/sge_selinux
 # grep sge_ /etc/services
 # sge_qmaster     6444/tcp    # Grid Engine Qmaster Service
 # sge_qmaster     6444/udp    # Grid Engine Qmaster Service
@@ -42,6 +42,7 @@ function sebools {
   setsebool -P virt_use_xserver on
 
   setsebool -P sge_use_nfs on
+  setsebool -P sge_domain_can_network_connect on
 }
 
 function seports {
@@ -98,8 +99,9 @@ function seports {
 }
 
 function sesge {
-  echo setsebool -P sge_use_nfs on
+  echo setsebool -P sge_use_nfs and sge_domain_can_network_connect
   setsebool -P sge_use_nfs on
+  setsebool -P sge_domain_can_network_connect on
 
   echo gridengine SGE ports ... sge_qmaster is 6444 and sge_execd is 6445 ...
 # https://bugzilla.redhat.com/show_bug.cgi?id=963305 mentions seg_port, but this fails ...
@@ -114,10 +116,37 @@ function sesge {
   semanage permissive -a sge_job_t
 
   echo placeholder for sge file context settings ...
+  semanage fcontext -a -t cluster_conf_t "/etc/cluster(/.*)?"
+
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pcsd(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/cluster(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/openais(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pengine(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/corosync(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/usr/lib/heartbeat(/.*)?"
+  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pacemaker(/.*)?"
+
+  semanage fcontext -a -t cluster_var_run_t "/var/run/crm(/.*)?"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/cman_.*"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/rsctmp(/.*)?"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/aisexec.*"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/heartbeat(/.*)?"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync-qnetd(/.*)?"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync-qdevice(/.*)?"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/cpglockd.pid"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync.pid"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/rgmanager.pid"
+  semanage fcontext -a -t cluster_var_run_t "/var/run/cluster/rgmanager.sk"
+
+  semanage fcontext -a -t root_t "/"
+  semanage fcontext -a -t "/initrd"
+
+  semanage fcontext -a -t sge_spool_t "/usr/spool/gridengine(/.*)?"
+
   semanage fcontext -a -t sge_execd_exec_t "/usr/share/gridengine/*"
   semanage fcontext -a -t sge_job_exec_t "/usr/share/gridengine/*"
   semanage fcontext -a -t sge_shepherd_exec_t "/usr/share/gridengine/*"
-  semanage fcontext -a -t sge_spool_t "/usr/share/gridengine/*"
+
   semanage fcontext -a -t sge_tmp_t "/usr/share/gridengine/*"
 }
 
@@ -152,7 +181,7 @@ systatus
 # selinux -v
 sesge -v
 
-setenforce 1 
+setenforce 1
 se=`getenforce`
 echo "SELinux == $se"
 echo '------------------------'
@@ -160,4 +189,3 @@ echo '------------------------'
 echo set system security status
 # systatus -v
 systatus
-
