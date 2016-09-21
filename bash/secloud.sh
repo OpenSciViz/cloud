@@ -21,7 +21,7 @@ function systatus {
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
   semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
-  if [ $1 == '-v' ] ; then
+  if [[ $1 == -v ]] ; then
    auditctl -l
    seinfo -t
    semanage port -l
@@ -90,10 +90,11 @@ function seports {
   semanage port -a -t http_port_t -p tcp 45219
 
 # gridengine SGE ports (sge_qmaster is 6444 and sge_execd is 6445)
-  semanage port -a -t sge_port_t -p tcp 6444
-  semanage port -a -t sge_port_t -p udp 6444
-  semanage port -a -t sge_port_t -p tcp 6445
-  semanage port -a -t sge_port_t -p udp 6445
+# https://bugzilla.redhat.com/show_bug.cgi?id=963305 mentions seg_port, but this fails ...
+# semanage port -a -t sge_port_t -p tcp 6444
+# semanage port -a -t sge_port_t -p udp 6444
+# semanage port -a -t sge_port_t -p tcp 6445
+# semanage port -a -t sge_port_t -p udp 6445
 }
 
 function sesge {
@@ -101,10 +102,11 @@ function sesge {
   setsebool -P sge_use_nfs on
 
   echo gridengine SGE ports ... sge_qmaster is 6444 and sge_execd is 6445 ...
-  semanage port -a -t sge_port_t -p tcp 6444
-  semanage port -a -t sge_port_t -p udp 6444
-  semanage port -a -t sge_port_t -p tcp 6445
-  semanage port -a -t sge_port_t -p udp 6445
+# https://bugzilla.redhat.com/show_bug.cgi?id=963305 mentions seg_port, but this fails ...
+# semanage port -a -t sge_port_t -p tcp 6444
+# semanage port -a -t sge_port_t -p udp 6444
+# semanage port -a -t sge_port_t -p tcp 6445
+# semanage port -a -t sge_port_t -p udp 6445
 
   semanage permissive -a sge_execd_t
   semanage permissive -a sge_job_ssh_t
@@ -150,9 +152,9 @@ systatus
 # selinux -v
 sesge -v
 
+setenforce 1 
 se=`getenforce`
 echo "SELinux == $se"
-if [[ $se == Permissive ]] ; then setenforce 1 ; fi 
 echo '------------------------'
 
 echo set system security status
