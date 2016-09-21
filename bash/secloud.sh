@@ -8,6 +8,12 @@
 # http://linux.die.net/man/8/libvirt_selinux
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
+# https://linux.die.net/man/8/sge_selinux
+# grep sge_ /etc/services
+# sge_qmaster     6444/tcp    # Grid Engine Qmaster Service
+# sge_qmaster     6444/udp    # Grid Engine Qmaster Service
+# sge_execd       6445/tcp    # Grid Engine Execution Service
+# sge_execd       6445/udp    # Grid Engine Execution Service
 
 function systatus {
   \mount && \df -h
