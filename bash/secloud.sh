@@ -143,11 +143,11 @@ function sesge {
 
   semanage fcontext -a -t sge_spool_t "/usr/spool/gridengine(/.*)?"
 
-  semanage fcontext -a -t sge_execd_exec_t "/usr/share/gridengine/*"
-  semanage fcontext -a -t sge_job_exec_t "/usr/share/gridengine/*"
-  semanage fcontext -a -t sge_shepherd_exec_t "/usr/share/gridengine/*"
-
-  semanage fcontext -a -t sge_tmp_t "/usr/share/gridengine/*"
+# placeholders:
+  semanage fcontext -a -t sge_execd_exec_t "/usr/share/gridengine(/.*)?"
+  semanage fcontext -a -t sge_job_exec_t "/usr/share/gridengine(/.*)?"
+  semanage fcontext -a -t sge_shepherd_exec_t "/usr/share/gridengine(/.*)?"
+  semanage fcontext -a -t sge_tmp_t "/usr/share/gridengine(/.*)?"
 }
 
 function selinux {
