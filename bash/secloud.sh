@@ -8,8 +8,6 @@
 # http://linux.die.net/man/8/libvirt_selinux
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
-# http://linux.die.net/man/8/xauth_selinux
-# http://linux.die.net/man/8/automount_selinux 
 
 function systatus {
   \mount && \df -h
@@ -17,17 +15,17 @@ function systatus {
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
   semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
-  if [ "$1" == '-v' ] ; then
-    auditctl -l
-    seinfo -t
-    semanage port -l
-    iptables -L
-    sysctl -a
+  if [ $1 == '-v' ] ; then
+   auditctl -l
+   seinfo -t
+   semanage port -l
+   iptables -L
+   sysctl -a
   fi
 }
 
 function sebools {
-  echo allow java_execstack, NFS, and kvm VM guests NFS and X11
+  echo allow java_execstack, NFS, and kvm VM guests, X11, and SGE gridengine
   setsebool -P allow_java_execstack on
   setsebool -P allow_mount_anyfile on
 
@@ -36,6 +34,8 @@ function sebools {
   setsebool -P rsync_use_nfs on
   setsebool -P virt_use_nfs on
   setsebool -P virt_use_xserver on
+
+  setsebool -P sge_use_nfs on
 }
 
 function seports {
@@ -82,15 +82,43 @@ function seports {
 
 # JMX console for cloudstack
   semanage port -a -t http_port_t -p tcp 45219
+
+# gridengine SGE ports (sge_qmaster is 6444 and sge_execd is 6445)
+  semanage port -a -t sge_port_t -p tcp 6444
+  semanage port -a -t sge_port_t -p udp 6444
+  semanage port -a -t sge_port_t -p tcp 6445
+  semanage port -a -t sge_port_t -p udp 6445
+}
+
+function sesge {
+  echo setsebool -P sge_use_nfs on
+  setsebool -P sge_use_nfs on
+
+  echo gridengine SGE ports ... sge_qmaster is 6444 and sge_execd is 6445 ...
+  semanage port -a -t sge_port_t -p tcp 6444
+  semanage port -a -t sge_port_t -p udp 6444
+  semanage port -a -t sge_port_t -p tcp 6445
+  semanage port -a -t sge_port_t -p udp 6445
+
+  semanage permissive -a sge_execd_t
+  semanage permissive -a sge_job_ssh_t
+  semanage permissive -a sge_shepherd_t
+  semanage permissive -a sge_job_t
+
+  echo placeholder for sge file context settings ...
+  semanage fcontext -a -t sge_execd_exec_t "/usr/share/gridengine/*"
+  semanage fcontext -a -t sge_job_exec_t "/usr/share/gridengine/*"
+  semanage fcontext -a -t sge_shepherd_exec_t "/usr/share/gridengine/*"
+  semanage fcontext -a -t sge_spool_t "/usr/share/gridengine/*"
+  semanage fcontext -a -t sge_tmp_t "/usr/share/gridengine/*"
 }
 
 function selinux {
   echo selinux permit cloudstack and its deps
   sebools -v
   seports -v
+  sesge -v
 
-  echo permissive mode for automount, dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
-  semanage permissive -a automount_t
   semanage permissive -a dnsmasq_t
   semanage permissive -a java_t
   semanage permissive -a mount_t
@@ -98,7 +126,6 @@ function selinux {
   semanage permissive -a nfsd_t
   semanage permissive -a qemu_t
   semanage permissive -a virtd_t
-  semanage permissive -a xauth_t
 
   echo make sure selinux allows mysql i/o:
   semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
@@ -106,10 +133,6 @@ function selinux {
 
   echo make sure selinux allows nfs rw:
   semanage fcontext -a -t nfsd_rw_t "/export/*"
-
-  echo for automounted home "directories that need to be shared by NFS" ...
-  echo as described in the Gotchas section of https://wiki.centos.org/HowTos/SELinux
-  semanage fcontext -a -t public_content_rw_t "/home/*"
 
   restorecon -rv /
 }
@@ -119,6 +142,7 @@ systatus
 
 # echo set some selinux system security status
 # selinux -v
+sesge -v
 
 se=`getenforce`
 echo "SELinux == $se"
