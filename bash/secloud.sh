@@ -170,6 +170,7 @@ function selinux {
 
   echo make sure selinux allows nfs rw:
   semanage fcontext -a -t nfsd_rw_t "/export/*"
+  semanage fcontext -a -t nfsd_rw_t "/export(/.*)?"
 
   restorecon -rv /
 }
