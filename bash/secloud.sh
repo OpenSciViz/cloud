@@ -18,6 +18,7 @@
 function systatus {
   \mount && \df -h
   sestatus $1
+  semodule -l | grep permissive
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
   semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
