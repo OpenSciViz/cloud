@@ -19,8 +19,9 @@ function systatus {
   \mount && \df -h
   sestatus $1
   semodule -l | grep permissive
+  semanage boolean -l|grep http|grep  -v off
+  semanage boolean -l | egrep 'http|mysqld|nfs|java|iptabl|qemu|virt'
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
-  semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
   if [[ $1 == -v ]] ; then
    auditctl -l
