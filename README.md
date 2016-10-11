@@ -109,7 +109,11 @@
 
   * service cloudstack-management status -- indicates the above script has started the daemon. It may be a bit premature, so stop the daemon and preceed with a few other config. activities ...
 
-11. The newly created iptables file lacks all annotations/comments; these should be merged into the new file from the backup.
+11. Firewall: the newly created iptables file lacks all annotations/comments -- edit/merge the new file with the backup.
+
+  * Make sure the mysqld and http(s) tcp ports are configured in iptables on both "lo" and NICs with the host IP
+
+  * Use IPs ONLY in iptables -- DNS items in iptables can cause problems!
 
 12. Our cs_mysql.sh bash script defines some convenient bash functions (dbinfo, drop_db, dump_db, etc.) run:
 
