@@ -35,7 +35,7 @@
 
 1. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges, tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
 
-  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables) may be problematic. Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc.) 
+  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables) may be problematic. Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc.)
 
 2. Git clone this repo. and take a look at the (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, cs_yum_rpms.sh, etc.
 
@@ -57,7 +57,7 @@
 
   * https://dev.mysql.com/downloads/connector/python ... Update: this is now included in the yum repo. for 4.9:
   <pre>
-  cat /etc/yum.repos.d/cloudstack.repo 
+  cat /etc/yum.repos.d/cloudstack.repo
   [cloudstack]
   name=cloudstack
   baseurl=http://cloudstack.apt-get.eu/centos/6/4.9/
@@ -78,17 +78,27 @@
   * /etc/cloudstack/management/db.properties -- can be hand-edited (or use init_db bash func -- see below)
   * The ISO for all System VMs results in running instances must be "patched" after 1st-time boot-up.
 
-      + 4.8: 
-        
+      + 4.8:
+
         - bare-metal host /usr/share/cloudstack-common/vms/systemvm.iso -- be sure to backup a copy.
         - bare-metal host /usr/share/cloudstack-common/vms/systemvm.zip -- scp to system VMs and unzip under /usr/local/cloud/systemvm
 
       + 4.9:
-        
+
         - bare-metal host /usr/share/cloudstack-common/vms/systemvm.iso -- seems intact after many restarts
         - system VMs /usr/local/cloud/systemvm also intact
 
-9. Start the mysqld and source cs_mysql.sh: ". ./bash/cs_mysql.sh"
+9. Mysqld:
+
+  * source cs_mysql.sh: ". ./bash/cs_mysql.sh" to provide some useful bash functions
+
+  * Edit the /etc/my.cnf to enable/disable logs  -- keep the slow transaction and error logs on; the general log is optional
+    but be aware that it can become excessively large (many 10s of GB over time) and ultimately fill-up /var!
+
+  * Edit /etc/logrotate.d/mysql to uncomment-out rotate conf. and make sure log path is consistent with /etc/my.cnf
+
+  * service mysqld start
+
 
 10. The yum/rpm management post-install indicates one should manually run:
 
@@ -155,7 +165,7 @@
    </pre>
 
 2. edit /etc/libvirt/qemu.conf:
-   <pre> 
+   <pre>
      grep 'vnc_listen' /etc/libvirt/qemu.conf
      vnc_listen="0.0.0.0"
    </pre>
@@ -232,7 +242,7 @@
     Evidently libvirtd spawns dnsmasq, which it needs, but if dnsmasq is alreay up when libvirtd attempts to
     spawn it, the cloudstack hyoervisor agent can get confused. Also, since dnsmasqd can cache DNS entries, avoid
     potential cache conflicts by keeping nscd off (the other DNS cache daemon) ...
-   
+
    Notice that libvirtd should be up immediately after reboot, but any subsequent
    edit of /etc/libvirt* conf. files will require a restart. It's worth
    checking the default libvirtd (KVM) boot status:
@@ -246,7 +256,7 @@
 
    * virsh vol-list any-pool-Id-shown
 
-   Below there are some check-list items for using virsh to flush / remove any lingering cloudstack remnants, 
+   Below there are some check-list items for using virsh to flush / remove any lingering cloudstack remnants,
    if desired. See the section on forcing the hypervisor agent to create new system VMs.
 
   * Before a reboot, double check /etc/rc.local:
@@ -294,7 +304,7 @@
     <pre>
     /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://cloudstack.apt-get.eu/systemvm/4.6/systemvm64template-4.6.0-kvm.qcow2.bz2 -h lxc -F
     </pre>
-    
+
    Note the above version 4.6.0 seems to be appropriate for the 4.8 and 4.9 cloudstack releases. However,
    the 4.9 admin GUI shows for the Virtual Router System VM: Requires Upgrade "Yes", while the 4.8 GUI shows "No".
 
@@ -343,7 +353,7 @@
   A very large (but searchable) table of configuration items is presented. Many of these items must be manually set
   after the initial management serivce startup, before starting the hypervisor agent service. In most cases,
   (re)setting a Global Settings item requires a restart (or stop-then-start) of the management-server.
-  
+
   List of essential seetings:
 
   * CIDRs -- management server network, control network, guest VM ... also the CIDRs for secondary storage (see below)
@@ -359,7 +369,7 @@
     the patch section below.
 
   * Hypervisor.list -- just KVM
-   
+
   * System.vm.default.hypervisor -- KVM
 
   * Secstorage.allowed... -- IMPORTANT "Comma separated list of cidrs internal to the datacenter that can host template download servers"
@@ -390,7 +400,7 @@
 # D. System VM Patches and Early-Config -- once the admin GUI "Infrastructure" shows 2 System VMs
 
 1. Patching 4.9 vs. 4.8
-  
+
   As noted above, CIDRs and MS host IPs sould be consistent across all the moving parts. For example,
   if one sets the MS host IP via the Admin GUI Global Settings to 172.17.8.94, be sure the system VMs
   use that IP. Find the MS host IP setting in the system VMs under /var/cache/cloud/cmd\* files and
@@ -403,37 +413,37 @@
   The 4.9 ISO contains a full /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
 
     + Virsh console into each system VM.
-    
+
     + Check the contents of /usr/local/cloud/systemvm directory, with all *.jar *.py, *.sh deps.
-    
+
     + Stop the cloud daemin:
       <pre>service cloud stop</pre>
-   
+
     + Edit /var/cache/cloud/{cmdline,cmd_line.json} with the host IP and Management CIDRs one has established in the Admin GUI Global Settings
-    
-    + Run the early-config daemon: 
+
+    + Run the early-config daemon:
       <pre>service cloud-early-config restart</pre>
-   
+
     + Restart the cloud daemon:
       <pre>service cloud start</pre>
-    
+
     + Optionally edit /etc/ssh/sshd_config and restart the sshd:
       <pre>service ssh restart</pre>
-      
+
     + Refresh the Admin GUI Infrastructure page and click into the System VMs page and hopefully observe the "Agent State"   column show green "Up" for each System VM.
-     
+
   But ssh key-pairs may not have been inserted properly ... virsh console works, ssh and scp may not ...
   One can virsh console into each running system VM (root password) and manually configure sshd,
   and cut-n-paste the RSA key into the baremetal host /root/.ssh/id_rsa\*. Note there is no Virtual Router (VR)
   system VM initially; evidently the VR is created/booted with the very first guest VM launch.
-  
+
   IMPORTANT -- if the baremetal host /etc/.ssh/id_rsa.cloud has been zero'd (presumabley by the 4.9 hyperviser agent)
   or is incorrect, launching guest VM instances will fail due to the Virtual Router not booting fully. The correct RSA
   pem file can be copied from a running system VM's /etc/ssh/ssh_host_rsa_key.
 
   * 4.8: /usr/share/cloudstack-common/vms/systemvm.iso
-  
-    This ISO is smaller and its (Debial sysem VM) /usr/local/cloud/systemvm is nearly empty ... 
+
+    This ISO is smaller and its (Debial sysem VM) /usr/local/cloud/systemvm is nearly empty ...
 
      + (KVM host) /usr/share/cloudstack-common/vms/systemvm.zip -- evidently this is what's missing
 
@@ -441,12 +451,12 @@
   Fortunately ssh via -p 3922 and scp -P 3922 to the system VM's link-local eth0 (169.254.x.y) works.
 
    + scp /usr/share/cloudstack-common/vms/systemvm.zip into each system VM (/var/tmp) and then
-  
+
    + ssh login and unzip into either /usr/local/cloud/systemvm or /opt/cloud/systemvm and sym-link
       one to the other. Then run:
-      
+
    + service cloud-early-config (re)start and service (re)start and
-  
+
    + tail -f /var/log/cloud.log for any errors, etc.
 
   Once /usr/local/cloud/systemvm/* files are installed, (re)run / (re)start the cloud services:
@@ -498,7 +508,7 @@
 
 <pre>
 virsh pool-list
-Name                 State      Autostart 
+Name                 State      Autostart
 -----------------------------------------
 e46a7f5f-fd84-31dc-92dc-f6a77fda375a active     no        
 </pre>
@@ -543,7 +553,7 @@ virsh vol-delete KVMHA e46a7f5f-fd84-31dc-92dc-f6a77fda375a
 
   * service cloudstack-agent start
 
-    After many many minutes Admin GUI Infrastructure will show 2 (new) System VMs. Note a 3rd System VM (Virtual Router) 
+    After many many minutes Admin GUI Infrastructure will show 2 (new) System VMs. Note a 3rd System VM (Virtual Router)
     will only appear once the first guest VM is launched.
 
   * Click thru to the "System VMs" page and monitor their status by refreshing the page. Eventually the "VM state" column
@@ -619,7 +629,7 @@ Note the row of small icons shows (the rightmost) one that looks like ">_". Hove
      + https://issues.apache.org/jira/browse/CLOUDSTACK-9164
 
    The above describes a manual patch for the console's "ajaxviewer.js" that should be found in the VM's
-   
+
      + /usr/local/cloud/systemvm/js sub-directory.
 
    Copy (scp) the patchfile (prevent_quick_search_key.patch) to the hypervisor host from the git cloned
