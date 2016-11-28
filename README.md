@@ -102,8 +102,7 @@
 
 10. The yum/rpm management post-install indicates one should manually run:
 
-  * /usr/bin/cloudstack-setup-management -- creates and inits the mysql "cloud" db and db-account, and overwrites
-    /etc/cloudstack/management/db.properties
+  * /usr/bin/cloudstack-setup-management -- creates a password-locked cloud user and group "sudoer" system account. Also inits. the mysql "cloud" db and db-account, overwriting /etc/cloudstack/management/db.properties
 
   * The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
 
@@ -274,7 +273,7 @@
     (with very obscure error logs). Once the cloudstack system has been configured with a specific default gateway in the route table,
     changing the default gateway seems to cause problems for cloudstack-management.
 
-  * Various and sundry files under /etc that have been touched during the cloudstack eval (attempting to configure as sudoer rather than root):
+  * Various and sundry files under /etc that have been touched during the cloudstack eval:
 
     + /etc/audit\* -- selinux audit rules
     + /etc/init.d/cloudstack\* -- startup scripts
@@ -282,14 +281,22 @@
     + /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} -- ipv4 forwarding, NFS, KVM-libvirt ...
     + /etc/modprobe.d/ipv6.conf -- comment all lines out (ala Sir Alex)
     + /etc/polkit\* -- libvirt users
-    +  /etc/security/\* -- non-krb5 logins
-    +  /etc/selinux/config -- permissive vs. enforcing
-    +  /etc/ssh/\* -- non-krb5 login
-    +  /etc/sysconfig/{ptables,network\*} -- eth0-1, br0-1, cloudbr0-1
-    +  /etc/udev/rules.d/\* -- ?
-    +  /etc/xinetd.d/\* -- TBD
-    +  /etc/yum.repos.d/cloudstack -- yum install
+    + /etc/security/\* -- non-krb5 logins
+    + /etc/selinux/config -- permissive vs. enforcing
+    + /etc/ssh/\* -- non-krb5 login
+    + /etc/sudoers -- "cloud" account must be a sudoer. 
+    + /etc/sysconfig/{ptables,network\*} -- eth0-1, br0-1, cloudbr0-1
+    + /etc/udev/rules.d/\* -- ?
+    + /etc/xinetd.d/\* -- TBD
+    + /etc/yum.repos.d/cloudstack -- yum install
 
+  * Note that some file-system content will be accessed by the cloudstack services as root and others as user "cloud".
+    Consequently file-system elements owned/created by root should allow access via the "cloud" account. It's simplest
+    to set root umask to 0022, and at the very least make sure the following permissions are set:
+    
+    + find /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]* -type d -exec chmod a+x {}  \;
+    + chmod -R a+r /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]*
+    
 # C. Initial Configuration via Admin GUI
 
 1. Before starting the cloudstack services be sure that:
