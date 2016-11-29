@@ -344,17 +344,43 @@
 
 5. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root".
 
-  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful configs
+  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successes
   have occurred when using root. Note that the setup script mentioned above creates a so-called "password-locked" account
   "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the cloud account a password and try
   using it for adding a host to a cluster. Also note that adding a host to a cluster requires the cloudstack-agent service
   to be started and fully initialized and communicating with both the management service and libvirtd. If one has restarted
   the management service after editing the Global Settings (see below), with the hypervisor agent up, the agent will usually
   reconnect gracefully. If the agent is not up, the next time one attempts to use the management service Admin GUI to add
-  a host to a cluster, the management server may attempt to start the agent (assuming it is configured to run on the same host),
+  a host to a cluster, the management server may attempt to start the agent (if configured to run on the same host),
   but that can take awhile, and it's quicker to manually start the agent once the "heartbeats" appear in the management
   server log.
+  
+  Although the root account is used to run the services and also to perform the act of adding a (hypervisor) host to a
+  cluster, Cloudstack nevertheless performs some operations using the special password-locked account "cloud".
+  Consequently filesystem persmissions amd umasks used by root must allow read and sometime execute persmissions by
+  the cloud account and/or cloud group. This helps (performed as root):
+  
+    * umase 0022
+    
+    * find /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]* -type d -exec chmod a+x {}  \;
+ 
+    * chmod -R a+r /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]*
 
+   Alos note that whe
+   
+   Also note  that when adding a new hypervisor host to a cluster, Cloudstack quietly overwrites the SELinux config.,
+   setting it to Permissive! Consequently it is incumbent on the admin. to restore SELinux to Enforcing:
+
+   <pre>
+   sestatus
+   SELinux status:                 enabled
+   SELinuxfs mount:                /selinux
+   Current mode:                   enforcing
+   Mode from config file:          enforcing
+   Policy version:                 24
+   Policy from config file:        targeted
+   </pre>
+   
 6. Check the /var/log/cloudstack/agent/agent.log -- it it does not exist or is empty, one may start the agent manually:
 
   * service cloudstack-agent start && tail -f /var/log/cloudstack/agent/agent.log
