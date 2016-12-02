@@ -88,32 +88,46 @@ function seports {
   semanage port -a -t http_port_t -p tcp 45219
 }
 
-function selinux {
-  echo selinux permit cloudstack and its deps
-  sebools -v
-  seports -v
-
-  echo permissive mode for automount, dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
-  semanage permissive -a automount_t
-  semanage permissive -a dnsmasq_t
-  semanage permissive -a java_t
+function sefilesys {
   semanage permissive -a mount_t
-  semanage permissive -a mysqld_t
-  semanage permissive -a nfsd_t
-  semanage permissive -a qemu_t
-  semanage permissive -a virtd_t
-  semanage permissive -a xauth_t
-
-  echo make sure selinux allows mysql i/o:
-  semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
-  semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
+  semanage permissive -a automount_t
 
   echo make sure selinux allows nfs rw:
+  semanage permissive -a nfsd_t
   semanage fcontext -a -t nfsd_rw_t "/export/*"
 
   echo for automounted home "directories that need to be shared by NFS" ...
   echo as described in the Gotchas section of https://wiki.centos.org/HowTos/SELinux
   semanage fcontext -a -t public_content_rw_t "/home/*"
+
+  echo do we support ZFS yet ...
+# semanage permissive -a zfs_t
+# semanage permissive -a zfs_exec_t
+# semanage permissive -a zfs_initrc_exec_t
+}
+
+function semysql {
+  echo make sure selinux allows mysql i/o:
+  semanage permissive -a mysqld_t
+  semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
+  semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
+}
+
+function selinux {
+  echo selinux permit cloudstack and its deps
+  sebools -v
+  seports -v
+
+  echo permissive mode for automount, mount, mysql, nfs, zfs
+  sefilesys -v
+  semysql -v
+
+  echo permissive mode for dnsmasq, java,qemu, virt, xauth
+  semanage permissive -a dnsmasq_t
+  semanage permissive -a java_t
+  semanage permissive -a qemu_t
+  semanage permissive -a virtd_t
+  semanage permissive -a xauth_t
 
   restorecon -rv /
 }
