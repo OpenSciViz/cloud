@@ -102,8 +102,7 @@
 
 10. The yum/rpm management post-install indicates one should manually run:
 
-  * /usr/bin/cloudstack-setup-management -- creates and inits the mysql "cloud" db and db-account, and overwrites
-    /etc/cloudstack/management/db.properties
+  * /usr/bin/cloudstack-setup-management -- creates a password-locked cloud user and group "sudoer" system account. Also inits. the mysql "cloud" db and db-account, overwriting /etc/cloudstack/management/db.properties
 
   * The above also inserts some cloudstack iptables rules and performs iptables-save, overwriting /etc/sysconfig/iptables
 
@@ -274,7 +273,7 @@
     (with very obscure error logs). Once the cloudstack system has been configured with a specific default gateway in the route table,
     changing the default gateway seems to cause problems for cloudstack-management.
 
-  * Various and sundry files under /etc that have been touched during the cloudstack eval (attempting to configure as sudoer rather than root):
+  * Various and sundry files under /etc that have been touched during the cloudstack eval:
 
     + /etc/audit\* -- selinux audit rules
     + /etc/init.d/cloudstack\* -- startup scripts
@@ -282,14 +281,22 @@
     + /etc/{exports,hosts,hosts.allow,idmapd.conf,my.cnf,passwd,shadow,sysctl.conf} -- ipv4 forwarding, NFS, KVM-libvirt ...
     + /etc/modprobe.d/ipv6.conf -- comment all lines out (ala Sir Alex)
     + /etc/polkit\* -- libvirt users
-    +  /etc/security/\* -- non-krb5 logins
-    +  /etc/selinux/config -- permissive vs. enforcing
-    +  /etc/ssh/\* -- non-krb5 login
-    +  /etc/sysconfig/{ptables,network\*} -- eth0-1, br0-1, cloudbr0-1
-    +  /etc/udev/rules.d/\* -- ?
-    +  /etc/xinetd.d/\* -- TBD
-    +  /etc/yum.repos.d/cloudstack -- yum install
+    + /etc/security/\* -- non-krb5 logins
+    + /etc/selinux/config -- permissive vs. enforcing
+    + /etc/ssh/\* -- non-krb5 login
+    + /etc/sudoers -- "cloud" account must be a sudoer. 
+    + /etc/sysconfig/{ptables,network\*} -- eth0-1, br0-1, cloudbr0-1
+    + /etc/udev/rules.d/\* -- ?
+    + /etc/xinetd.d/\* -- TBD
+    + /etc/yum.repos.d/cloudstack -- yum install
 
+  * Note that some file-system content will be accessed by the cloudstack services as root and others as user "cloud".
+    Consequently file-system elements owned/created by root should allow access via the "cloud" account. It's simplest
+    to set root umask to 0022, and at the very least make sure the following permissions are set:
+    
+    + find /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]* -type d -exec chmod a+x {}  \;
+    + chmod -R a+r /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]*
+    
 # C. Initial Configuration via Admin GUI
 
 1. Before starting the cloudstack services be sure that:
@@ -337,17 +344,43 @@
 
 5. When adding a host to a cluster, the Admin GUI prompts for an account and password with the hint "Usually root".
 
-  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successful configs
+  All attempts to use a sudoer account rather than root caused problems down-stream. Consequently the only successes
   have occurred when using root. Note that the setup script mentioned above creates a so-called "password-locked" account
   "cloud" with group "cloud" that is a sudoer account. It may be of interest to give the cloud account a password and try
   using it for adding a host to a cluster. Also note that adding a host to a cluster requires the cloudstack-agent service
   to be started and fully initialized and communicating with both the management service and libvirtd. If one has restarted
   the management service after editing the Global Settings (see below), with the hypervisor agent up, the agent will usually
   reconnect gracefully. If the agent is not up, the next time one attempts to use the management service Admin GUI to add
-  a host to a cluster, the management server may attempt to start the agent (assuming it is configured to run on the same host),
+  a host to a cluster, the management server may attempt to start the agent (if configured to run on the same host),
   but that can take awhile, and it's quicker to manually start the agent once the "heartbeats" appear in the management
   server log.
+  
+  Although the root account is used to run the services and also to perform the act of adding a (hypervisor) host to a
+  cluster, Cloudstack nevertheless performs some operations using the special password-locked account "cloud".
+  Consequently filesystem persmissions amd umasks used by root must allow read and sometime execute persmissions by
+  the cloud account and/or cloud group. This helps (performed as root):
+  
+    * umase 0022
+    
+    * find /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]* -type d -exec chmod a+x {}  \;
+ 
+    * chmod -R a+r /etc/cloudstack /var/log/cloudstack /usr/share/cloudstack-[a-z]*
 
+   Alos note that whe
+   
+   Also note  that when adding a new hypervisor host to a cluster, Cloudstack quietly overwrites the SELinux config.,
+   setting it to Permissive! Consequently it is incumbent on the admin. to restore SELinux to Enforcing:
+
+   <pre>
+   sestatus
+   SELinux status:                 enabled
+   SELinuxfs mount:                /selinux
+   Current mode:                   enforcing
+   Mode from config file:          enforcing
+   Policy version:                 24
+   Policy from config file:        targeted
+   </pre>
+   
 6. Check the /var/log/cloudstack/agent/agent.log -- it it does not exist or is empty, one may start the agent manually:
 
   * service cloudstack-agent start && tail -f /var/log/cloudstack/agent/agent.log
