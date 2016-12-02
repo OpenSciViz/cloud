@@ -1,0 +1,1 @@
+../../c8-14/scripts/cs_yum_rpms.sh

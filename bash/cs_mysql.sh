@@ -54,6 +54,7 @@ function storage {
 }
 
 function init_db {
+# mysql -e "update mysql.user set password=PASSWORD('cloud') where User='root'; flush privileges;" >& /dev/null
   dt=`date "+%Y.%j.%H.%M.%S"`
   dbprop=/etc/cloudstack/management/db.properties
   backup=/etc/cloudstack/management/db.properties${dt}

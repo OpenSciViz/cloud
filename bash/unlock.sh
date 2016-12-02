@@ -1,6 +1,5 @@
 #!/bin/bash
 # https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Managing_Confined_Services/sect-Managing_Confined_Services-MySQL-Booleans.html
-# http://linux.die.net/man/8/java_selinux
 
 function systatus {
   \mount && \df -h
@@ -30,13 +29,13 @@ function sebools {
 
 # move all semanage stuff here:
 function selinux {
-  echo selinux pertmit cloudstack java and jsvc
+  echo selinux permit cloudstack and its deps
+  semanage permissive -a dnsmasq_t
+  semanage permissive -a virtd_t
   semanage permissive -a java_t
-# semanage fcontext -a -t java_exec_t  
-# semanage fcontext -a -t java_tmp_t  
-# semanage fcontext -a -t java_tmpfs_t  
 
   echo make sure selinux allows mysql i/o:
+  semanage permissive -a mysqld_t
   semanage fcontext -a -t mysqld_db_t "/var/lib/mysql(/.*)?"
 
   echo allow cloudstack ports
@@ -82,9 +81,6 @@ function selinux {
 
 # JMX console for cloudstack
 # semanage port -a -t httpd_port_t -p tcp 45219
-
-# finally ? enable policy module(s)
-# semanage module 
 }
 
 echo current system security status
@@ -177,3 +173,4 @@ chmod -R a+rw $sysdir
 
 echo current system security status
 systatus -v
+

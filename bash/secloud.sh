@@ -8,43 +8,38 @@
 # http://linux.die.net/man/8/libvirt_selinux
 # http://linux.die.net/man/8/mysqld_selinux
 # http://linux.die.net/man/8/java_selinux
-# https://www.mankier.com/8/sge_execd_selinux and https://linux.die.net/man/8/sge_selinux
-# grep sge_ /etc/services
-# sge_qmaster     6444/tcp    # Grid Engine Qmaster Service
-# sge_qmaster     6444/udp    # Grid Engine Qmaster Service
-# sge_execd       6445/tcp    # Grid Engine Execution Service
-# sge_execd       6445/udp    # Grid Engine Execution Service
+# http://linux.die.net/man/8/xauth_selinux
+# http://linux.die.net/man/8/automount_selinux 
 
 function systatus {
   \mount && \df -h
   sestatus $1
-  semodule -l | grep permissive
-  semanage boolean -l|grep http|grep  -v off
-  semanage boolean -l | egrep 'http|mysqld|nfs|java|iptabl|qemu|virt'
   ps -eZ | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
+  semanage boolean -l | egrep 'mysqld|nfs|java|iptabl|qemu|virt'
 # seinfo -x /etc/selinux/targeted/policy/policy.24
-  if [[ $1 == -v ]] ; then
-   auditctl -l
-   seinfo -t
-   semanage port -l
-   iptables -L
-   sysctl -a
+  if [ "$1" == '-v' ] ; then
+    auditctl -l
+    seinfo -t
+    semanage port -l
+    iptables -L
+    sysctl -a
   fi
 }
 
 function sebools {
-  echo allow java_execstack, NFS, and kvm VM guests, X11, and SGE gridengine
+  echo allow java_execstack, NFS, and kvm VM guests NFS and X11
   setsebool -P allow_java_execstack on
   setsebool -P allow_mount_anyfile on
 
+  setsebool -P httpd_can_network_connect on
+  setsebool -P httpd_enable_homedirs on
   setsebool -P httpd_use_nfs on
+
   setsebool -P qemu_use_nfs on
   setsebool -P rsync_use_nfs on
+
   setsebool -P virt_use_nfs on
   setsebool -P virt_use_xserver on
-
-  setsebool -P sge_use_nfs on
-  setsebool -P sge_domain_can_network_connect on
 }
 
 function seports {
@@ -91,73 +86,15 @@ function seports {
 
 # JMX console for cloudstack
   semanage port -a -t http_port_t -p tcp 45219
-
-# gridengine SGE ports (sge_qmaster is 6444 and sge_execd is 6445)
-# https://bugzilla.redhat.com/show_bug.cgi?id=963305 mentions seg_port, but this fails ...
-# semanage port -a -t sge_port_t -p tcp 6444
-# semanage port -a -t sge_port_t -p udp 6444
-# semanage port -a -t sge_port_t -p tcp 6445
-# semanage port -a -t sge_port_t -p udp 6445
-}
-
-function sesge {
-  echo setsebool -P sge_use_nfs and sge_domain_can_network_connect
-  setsebool -P sge_use_nfs on
-  setsebool -P sge_domain_can_network_connect on
-
-  echo gridengine SGE ports ... sge_qmaster is 6444 and sge_execd is 6445 ...
-# https://bugzilla.redhat.com/show_bug.cgi?id=963305 mentions seg_port, but this fails ...
-# semanage port -a -t sge_port_t -p tcp 6444
-# semanage port -a -t sge_port_t -p udp 6444
-# semanage port -a -t sge_port_t -p tcp 6445
-# semanage port -a -t sge_port_t -p udp 6445
-
-  semanage permissive -a sge_execd_t
-  semanage permissive -a sge_job_ssh_t
-  semanage permissive -a sge_shepherd_t
-  semanage permissive -a sge_job_t
-
-  echo placeholder for sge file context settings ...
-  semanage fcontext -a -t cluster_conf_t "/etc/cluster(/.*)?"
-
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pcsd(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/cluster(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/openais(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pengine(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/corosync(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/usr/lib/heartbeat(/.*)?"
-  semanage fcontext -a -t cluster_var_lib_t "/var/lib/pacemaker(/.*)?"
-
-  semanage fcontext -a -t cluster_var_run_t "/var/run/crm(/.*)?"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/cman_.*"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/rsctmp(/.*)?"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/aisexec.*"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/heartbeat(/.*)?"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync-qnetd(/.*)?"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync-qdevice(/.*)?"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/cpglockd.pid"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/corosync.pid"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/rgmanager.pid"
-  semanage fcontext -a -t cluster_var_run_t "/var/run/cluster/rgmanager.sk"
-
-  semanage fcontext -a -t root_t "/"
-  semanage fcontext -a -t "/initrd"
-
-  semanage fcontext -a -t sge_spool_t "/usr/spool/gridengine(/.*)?"
-
-# placeholders:
-  semanage fcontext -a -t sge_execd_exec_t "/usr/share/gridengine(/.*)?"
-  semanage fcontext -a -t sge_job_exec_t "/usr/share/gridengine(/.*)?"
-  semanage fcontext -a -t sge_shepherd_exec_t "/usr/share/gridengine(/.*)?"
-  semanage fcontext -a -t sge_tmp_t "/usr/share/gridengine(/.*)?"
 }
 
 function selinux {
   echo selinux permit cloudstack and its deps
   sebools -v
   seports -v
-  sesge -v
 
+  echo permissive mode for automount, dnsmasq, java, mount, mysql, nfs, qemu, virt, xauth
+  semanage permissive -a automount_t
   semanage permissive -a dnsmasq_t
   semanage permissive -a java_t
   semanage permissive -a mount_t
@@ -165,6 +102,7 @@ function selinux {
   semanage permissive -a nfsd_t
   semanage permissive -a qemu_t
   semanage permissive -a virtd_t
+  semanage permissive -a xauth_t
 
   echo make sure selinux allows mysql i/o:
   semanage fcontext -a -t mysqld_db_t "/var/lib/mysql/*"
@@ -172,7 +110,10 @@ function selinux {
 
   echo make sure selinux allows nfs rw:
   semanage fcontext -a -t nfsd_rw_t "/export/*"
-  semanage fcontext -a -t nfsd_rw_t "/export(/.*)?"
+
+  echo for automounted home "directories that need to be shared by NFS" ...
+  echo as described in the Gotchas section of https://wiki.centos.org/HowTos/SELinux
+  semanage fcontext -a -t public_content_rw_t "/home/*"
 
   restorecon -rv /
 }
@@ -180,15 +121,15 @@ function selinux {
 echo current system security status
 systatus
 
-# echo set some selinux system security status
-# selinux -v
-sesge -v
+echo set some selinux system security status
+selinux -v
 
-setenforce 1
 se=`getenforce`
 echo "SELinux == $se"
+if [[ $se == Permissive ]] ; then setenforce 1 ; fi 
 echo '------------------------'
 
 echo set system security status
 # systatus -v
 systatus
+
