@@ -47,9 +47,12 @@
   Another update: If it is possible (sufficient IPs available) to configure the baremetal eth and bridge(s) AND VMs
   to ALL use the same subnet, the manual patch procedure described below is obviated.
 
-2. Git clone this repo. and take a look at the (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, cs_yum_rpms.sh, etc.
+2. Git clone this repo. and take a look at the (real and pseudo) bash and python scripts and other files:
+    secloud.sh, cs_mysql.sh, cs_yum_rpms.sh, etc. Note these are rudimentary scipts meant as starting points.
 
-3. Backup /etc/sysconfig/iptables file.
+3. Backup /etc/sysconfig/iptables file. Whenver one (re_runs the cloudstack-setup-management script, it inserts
+   some new ruels and uses "iptables-save" to overwite the current iptables file and any hand-edits (annotations
+   and comment-lines)! 
 
   Note the ports cloudstack needs: https://cwiki.apache.org/confluence/display/CLOUDSTACK/Ports+used+by+CloudStack
   for Apache Tomcat (HTTPD), NFS, DNS, etc., and also VNC 5800-6100
@@ -102,13 +105,14 @@
 
   * source cs_mysql.sh: ". ./bash/cs_mysql.sh" to provide some useful bash functions
 
-  * Edit the /etc/my.cnf to enable/disable logs  -- keep the slow transaction and error logs on; the general log is optional
-    but be aware that it can become excessively large (many 10s of GB over time) and ultimately fill-up /var!
+  * Edit the /etc/my.cnf to enable/disable logs -- keep the slow transaction and error logs. The general log is optional
+    but by default the mysql install does NOT enable log rotations, consequently the geneeral logcan become excessively
+    large (many 10s of GB over time) and ultimately fill-up /var, 
 
-  * Edit /etc/logrotate.d/mysql to uncomment-out rotate conf. and make sure log path is consistent with /etc/my.cnf
+  * Consider enabling mysql log rotations via: Edit /etc/logrotate.d/mysql to uncomment-out rotate conf. and make sure
+    log path is consistent with /etc/my.cnf
 
   * service mysqld start
-
 
 10. The yum/rpm management post-install indicates one should manually run:
 
