@@ -31,11 +31,21 @@
 ## Also, this ref is worth a look, although a tad dated:
   https://cwiki.apache.org/confluence/display/CLOUDSTACK/SSVM,+templates,+Secondary+storage+troubleshooting
 
+
 # A. Preliminaries
 
-1. Decide what LAN setup to use ... bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges, tagged VLAN or not, routing table with default gateway ... The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
+1. Decide what LAN setup to use: bridges with (real and virtual) NICs assigned, (multiple) IPs assigned to bridges,
+   tagged VLAN or not, routing table with default gateway. The fewer subnets the better (like 10.101.20.0 and 10.13.80.0)
 
-  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration completes successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via other/multiple routing tables) may be problematic. Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc.)
+  Note there MUST be a default gateway in the bare-metal host routing table. Once the cloudstack configuration
+  completes  successfully, changing the default gateway (although we may be able to use a 2-ndary gateway via
+  other/multiple routing tables) may be problematic.
+  
+  Update: this is mitigated once we establish and configure the baremetal and system VMs with a single subnet 
+  (e.g. 172.16.x.0/24 or 172.17.y.0/24, etc. for VMs and bridge, but with 10.101.u.v for baremetal)
+
+  Another update: If it is possible (sufficient IPs available) to configure the baremetal eth and bridge(s) AND VMs
+  to ALL use the same subnet, the manual patch procedure described below is obviated.
 
 2. Git clone this repo. and take a look at the (real and pseudo) bash and python scripts and other files: secloud.sh, cs_mysql.sh, cs_yum_rpms.sh, etc.
 
