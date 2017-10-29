@@ -6,9 +6,7 @@ git config --global push.default simple
 
 ---
 To verify repos. URL and branch, user:
-git remote -v
-git branch -vv
-git config --global --list
+git remote -v ; git branch -vv ; git config --global --list
 
 ---
 To avouid username and password prompt:
