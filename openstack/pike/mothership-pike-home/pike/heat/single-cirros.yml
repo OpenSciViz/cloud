@@ -1,0 +1,11 @@
+heat_template_version: 2017-09-01
+
+description: Simple template to deploy a single compute instance with hardcoded values
+
+resources:
+  cirros-m1nano:
+    type: OS::Nova::Server
+    properties:
+      key_name: mykey
+      image: cirros
+      flavor: m1.nano

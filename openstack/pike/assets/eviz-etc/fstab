@@ -1,0 +1,12 @@
+
+#
+# /etc/fstab
+# Created by anaconda on Thu Jul 20 18:09:43 2017
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/vg-root     /                       ext4    discard,noatime 1 1
+UUID=253a28ba-e087-447c-9c44-05322b2800f5 /boot                   ext2    defaults        1 2
+/dev/mapper/vg-tmp      /tmp                    ext4    discard,noatime 1 2
+/dev/mapper/vg-swap     swap                    swap    defaults        0 0

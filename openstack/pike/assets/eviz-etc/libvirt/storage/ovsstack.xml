@@ -1,0 +1,19 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh pool-edit ovsstack
+or other application using the libvirt API.
+-->
+
+<pool type='dir'>
+  <name>ovsstack</name>
+  <uuid>ab5fba4b-2a84-4809-8605-a9c30ce9232f</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/home/hon/jul2017/openstack/ovsstack</path>
+  </target>
+</pool>

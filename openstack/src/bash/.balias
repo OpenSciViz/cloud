@@ -1,0 +1,232 @@
+os=`uname|cut -c1-6`
+if [ -n "${USER:-x}" ] ; then export USER=$LOGNAME ; fi
+if [ $os == "CYGWIN" ] ; then
+  alias dsktop='pushd /cygdrive/c/Documents\ and\ Settings/hon/Desktop/'
+  alias javac='/cygdrive/c/Program\ Files/Java/jdk1.6.0_17/bin/javac.exe'
+  alias java='/cygdrive/c/Program\ Files/Java/jdk1.6.0_17/bin/java.exe'
+fi
+export HOST=`hostname`
+export PROMPT_COMMAND='echo -en "\033]0;$USER $HOST\a"'
+#
+alias ps='\ps -ef'
+alias toqcow2='qemu-img convert -f qcow2 -O qcow2 -o compat=0.10'
+alias xclock='xclock -d -title c8-14 -update 1 &'
+alias mkpy='./configure --enable-shared --with-signal-module --with-fpectl --with-threads --with-ensurepip=install --prefix=/usr/local && make'
+#
+alias mine='chown -R hon:users'
+# virtualbox:
+alias vls='vboxmanage list vms -l'
+alias vlsr='vboxmanage list runningvms -l'
+# note that adding nic2 requires "powered-off" VM:
+alias vaddnic2="vboxmanage modifyvm Win8.1Samba4 --nic2 hostonly --nictype2 82540EM --hostonlyadapter2 'vboxnet0'"
+# vagrant:
+alias vup='vagrant up'
+alias vssh='vagrant ssh'
+alias vsusp='vagrant suspend'
+alias vhalt='vagrant halt'
+alias vrm='vagrant destroy'
+alias tarmar='pushd ~/mar2016 ; tar zcvf mar06VMs.tgz VMs/{*sh,*md,centos67_192.168.33.10-20-30/*.rb} ; popd'
+#
+alias hedt='seamonkey -editor'
+alias ttyhis='script ~/ttyhis/`tty|sed "s/\///g"`'
+alias nw=/opt/nwjs/nw
+#
+alias gitini='git clone --recursive'
+alias gitags='git describe --tags `git rev-list --tags` | head'
+alias gitci='git commit -a -m"more prose and/or code edits"; git push'
+#alias git1='git clone --depth 1' ... see git1 func below
+#
+alias pdf='atrilx'
+alias envnode='nodeenv --prebuilt'
+alias ruby='ruby -rubygems'
+alias py2venv='\virtualenv -p /usr/bin/python2.7 --clear --prompt=py2'
+#alias py2venv='\virtualenv -p /opt/local/bin/python2.7 --clear --always-copy --prompt=py2'
+#alias py3venv='/opt/bin/virtualenv -p /opt/bin/python3.5 --clear --always-copy --prompt=py3'
+alias py3venv='/opt/bin/pyvenv-3.5 --copies --clear'
+alias py2='python2.7 -uRO'
+alias py3='python3.5 -uRO'
+alias ipy='ipython --profile=sh'
+alias vipy="python -c 'import IPython; IPython.terminal.ipapp.launch_new_instance()'"
+alias md2rst='pandoc --from=markdown --to=rst'
+alias rst2md='pandoc --from=rst --to=markdown'
+alias jake='jake -t'
+alias hpscan200='scanimage -p --mode Color --resolution 200 --format=jpeg > scan200.jpg'
+alias hpscan300='scanimage -p --mode Color --resolution 300 --format=jpeg > scan300.jpg'
+alias hpscan600='scanimage -p --mode Color --resolution 600 --format=jpeg > scan600.jpg'
+alias portstat='sudo netstat -nap|grep -i listening'
+alias cp='cp -p'
+alias cpa='cp -a'
+alias cpr='cp -rp'
+#alias jx=/opt/jxcore/jx236_ub64/jx
+alias xn24g='\ssh -Y hon@63.141.239.90'
+alias cosatm8='\ssh -Y hon@u17706582.onlinehome-server.com'
+alias coscons='ssh -Y u77539905@sercon.onlinehome-server.com'
+alias ubuatm8='\ssh -Y hon@u17724570.onlinehome-server.com'
+alias ubucons='ssh -Y u77539877@sercon.onlinehome-server.com'
+alias sudo='sudo -H'
+# intel xdk for node-webkit
+alias xdk='/opt/intel/XDK/xdk.sh \!* &'
+#
+# amd radeon gpu device driver config tool:
+alias gpuinfo='aticonfig --odgt'
+alias gpuini='aticonfig --initial --input=/etc/X11/xorg.conf'
+# may need to install gnome-panel for iconapp: sudo apt-get install gnome-panel
+alias iconapp='gnome-desktop-item-edit --create-new ~/Desktop'
+# ubuntu 14 lts node-webkit:
+alias nw='env LD_LIBRARY_PATH=/opt/node-webkit-v0.9.2-linux-x64:/usr/local /opt/node-webkit-v0.9.2-linux-x64/nw &'
+alias rsnc='rsync -val --exclude=".svn" --exclude=".git"'
+alias ubuec2='ssh -i ~/.ssh/ec2-ubuntu13.pem ubuntu@ec2-ubuntu13'
+alias ubusnc='rsync -val --exclude=".svn" --exclude=".git" -e "ssh -i ~/.ssh/ec2-ubuntu13.pem"'
+alias limb='ssh -i ~/.ssh/$USER-earthlimb.pem $USER@earthlimb.net'
+alias aws='ssh -i ~/.ssh/$USER-aws.pem $USER@ec2-50-19-66-82.compute-1.amazonaws.com'
+alias marslimb='ssh -Y $USER@marslimb.net'
+alias earthlimb='ssh -Y $USER@earthlimb.net'
+alias laspcld='ssh -i ~/.ssh/$USER-laspmaven.pem $USER@laspmaven'
+alias soccld='ssh -i ~/.ssh/$USER-socmaven.pem $USER@socmaven'
+alias ln='ln -s'
+alias wget='wget --no-check-certificate'
+alias portuse='nc -z localhost 1-65535'
+alias mm='~/local/freemind-0.9.0_RC_4/freemind.sh'
+alias rdinu='\rdesktop -a 24 -g 1600x1120 -x b -r sound:local inu.nodc.noaa.gov &'
+alias dir='\ls -alqhF'
+alias df='\df -h'
+alias his='history|grep -i'
+alias mkdir='\mkdir -p'
+alias pd='\pushd'
+alias ssh='\ssh -Y'
+alias honsys='\ssh -Y hon@honsys.net'
+alias smoky='\ssh -Y smoky'
+alias gt5='gnome-terminal --tab --tab --tab --tab --tab &'
+alias acro=/home/dhon/local/Adobe/Reader8/bin/acroread
+alias fedadmin="${FEDORA_HOME}/client/bin/fedora-admin.sh &"
+alias editx='pushd ~/local/editix-free-2009-raw/bin; sh run.sh &' 
+alias apache88="$HOME/local/apache2/bin/httpd -f $HOME/local/apache2/conf/httpd.conf88"
+alias apache99="$HOME/local/apache2/bin/httpd -f $HOME/local/apache2/conf/httpd.conf99"
+#alias seamonkey=${HOME}/local/bin/seamonkey
+#alias realplay=${HOME}/local/bin/realplay
+alias usbls='lsusb; grep -i usb /proc/scsi/scsi'
+alias jdate='date "+%Y:%j:%H:%M:%S"'
+alias mkso_modpy='gcc -shared -z muldefs -z nodefs -L/home/dhon/local/lib  -L/home/dhon/local/apache/lib -o mod_python.so *.o -lpython2.6 -lapr-1'
+alias jrun='java -cp ".:/home/dhon/local/lib/java/irnoaa.jar:/home/dhon/local/lib/java/xerces/xercesImpl.jar:/home/dhon/local/lib/java/log4j.jar"'
+#
+# list all aliases and funcs:
+alias lal="alias|cut -d'=' -f1 ; declare -f|grep \("
+#
+############# funcs ############
+#
+# lsattr and ls -al
+function lsa {
+  ls -al $*
+  lsattr $*
+}
+
+#alias dirt='\ls -alFqh --color=none --time-style=long-iso |/bin/grep "`date  --rfc-3339=date`"'
+unalias dirt >& /dev/null
+#
+function dirt {
+  \ls -alqhF --color=none --time-style=long-iso $*|/bin/grep "`date  --rfc-3339=date`"
+}
+#
+#alias his='\history | \grep $*'
+unalias his >& /dev/null
+function his {
+  \history | \grep $*
+}
+#
+#alias edt='emacs -bg white -fg black -cr red -fn 9x15bold'
+unalias edt >& /dev/null
+function edt {
+  \emacs -bg white -fg black -cr red -fn 9x15bold $* &
+}
+#
+# svn aliases and funcs.
+unalias svnadd svnco svnbco svnci svninit svnlk svnls svnmv svnrm svnsync >& /dev/null
+alias svnci='svn commit --no-unlock -m "misc. bug fixes and new features..."'
+alias svnsync="svn update"
+alias svnlk="svn lock"
+alias svnls='svn list svn+ssh://hon@honsys.net/var/svnroot'
+#tika=`which tika-app-0.7.jar`
+#alias tika='java -jar '$tika
+#alias limb='ssh -Y $USER@marslimb.net'
+#
+# since bash alias lacks arg/param feature, define funcs:
+function svnanon {
+  \svn co svn://honsys.net/$1/trunk $1
+}
+function svn1ls {
+  \svn list svn+ssh://hon@honsys.net/var/svnroot/$1/trunk
+}
+function svn2ls {
+  \svn list svn+ssh://hon@honsys.net/var/svnroot/$1/trunk/$2
+}
+#alias svninit='svn import -m "import $1" $1 svn+ssh://hon@honsys.net/var/svnroot/$1/trunk'
+function svninit {
+  echo -n $1 ': '
+  \svn import -m "import $1" $1 svn+ssh://hon@honsys.net/var/svnroot/$1/trunk
+}
+#alias svnco='svn co svn+ssh://hon@honsys.net/var/svnroot/$1/trunk $1'
+function svnco {
+  \svn co svn+ssh://hon@honsys.net/var/svnroot/$1/trunk $1
+}
+function svntco {
+#  \svn co --config-option config:miscellany:use-commit-times=yes file:///var/svnroot/$1/trunk $1
+  \svn co --config-option config:miscellany:use-commit-times=yes svn+ssh://hon@honsys.net/var/svnroot/$1/trunk $1
+}
+function svn2co {
+  \svn co svn+ssh://hon@honsys.net/var/svnroot/$1/trunk/$2 $1/$2
+}
+#alias svnbco='svn co svn+ssh://hon@honsys.net/var/svnroot/$1/branches $1.branch'
+function svnbco {
+  echo -n $1.branch ': '
+  #mkdir $1.branch
+  \svn co svn+ssh://hon@honsys.net/var/svnroot/$1/branches $1.branch
+}
+#alias svnadd='svn add $* ; svn commit -m "initial checkin"'
+function svnadd {
+  \svn add $* ; svn commit -m "initial checkin"
+}
+#alias svnrm='svn del $* ; svn commit -m "cleanup"'
+function svnrm {
+  \svn del $* ; svn commit -m "cleanup"
+}
+#alias svnmv='svn mv $* ; svn commit -m "relocate"'
+function svnmv {
+  \svn mv $* ; svn commit -m "relocate"
+}
+#alias loc="sed '/^$/d' < mpa_sqltables.groovy | grep -v '//'|wc"
+function loc {
+  echo -n $1 ': '
+  sed '/^$/d' < $1 | grep -v '//' | wc -l
+}
+
+#function newusr {
+function nubusr {
+# useradd -g users -s /bin/tcsh -m -d /home/$1 $1 
+# cp -p ~/{.login,.cshrc,.alias,.bash_aliases,.balias,.profile} /home/$1
+  useradd -g users -s /bin/bash -m -d /home/$1 $1 
+  cp -p ~/.balias /home/$1
+  mkdir -p /home/$1/public_html 
+  chown -R ${1}:users /home/$1 ; chmod -R a+rx /home/$1
+}
+
+function portscan {
+  netstat --tcp -l -p --numeric-ports
+  nmap -T Aggressive -A -v localhost -p 1-65535
+  nc -z localhost 1-65535
+}
+
+function sftp {
+  /usr/bin/sftp -oIdentityFile=$1 $2
+}
+
+function cvsinit {
+# cvsinit usage: "cvsinit path-name project-name"
+  pushd $1 ; cvs import -m "initial import" $2 init v0_0 ; popd
+}
+
+# need git versions of snv funcs ... tbd
+
+#
+function git1 {
+  git clone --recursive $1 --depth 1
+}

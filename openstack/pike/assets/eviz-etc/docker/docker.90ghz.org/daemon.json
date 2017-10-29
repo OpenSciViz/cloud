@@ -1,0 +1,12 @@
+{
+  "debug": true,
+  "bridge": "none",
+  "dns": ["8.8.8.8","8.8.4.4","64.6.64.6","64.6.65.6"],
+  "fixed-cidr": "172.17.0.0/12",
+  "ip-forward": true,
+  "ip-masq": true,
+  "iptables": true,
+  "selinux-enabled": true,
+  "restart": false,
+  "insecure-registry": "localhost:5000"
+}

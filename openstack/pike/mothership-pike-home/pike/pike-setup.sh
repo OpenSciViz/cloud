@@ -1,0 +1,1 @@
+../src/bash/pike-setup.sh

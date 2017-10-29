@@ -1,0 +1,25 @@
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
+-N nova-api-FORWARD
+-N nova-api-INPUT
+-N nova-api-OUTPUT
+-N nova-api-local
+-N nova-filter-top
+-A INPUT -i virbr0 -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -i virbr0 -p tcp -m tcp --dport 53 -j ACCEPT
+-A INPUT -i virbr0 -p udp -m udp --dport 67 -j ACCEPT
+-A INPUT -i virbr0 -p tcp -m tcp --dport 67 -j ACCEPT
+-A INPUT -j nova-api-INPUT
+-A FORWARD -d 192.168.122.0/24 -o virbr0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -s 192.168.122.0/24 -i virbr0 -j ACCEPT
+-A FORWARD -i virbr0 -o virbr0 -j ACCEPT
+-A FORWARD -o virbr0 -j REJECT --reject-with icmp-port-unreachable
+-A FORWARD -i virbr0 -j REJECT --reject-with icmp-port-unreachable
+-A FORWARD -j nova-filter-top
+-A FORWARD -j nova-api-FORWARD
+-A OUTPUT -o virbr0 -p udp -m udp --dport 68 -j ACCEPT
+-A OUTPUT -j nova-filter-top
+-A OUTPUT -j nova-api-OUTPUT
+-A nova-api-INPUT -d 172.17.2.1/32 -p tcp -m tcp --dport 8775 -j ACCEPT
+-A nova-filter-top -j nova-api-local

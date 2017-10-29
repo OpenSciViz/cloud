@@ -1,0 +1,13 @@
+setup.py
+novaconsole/__init__.py
+novaconsole/client.py
+novaconsole/exc.py
+novaconsole/keystone.py
+novaconsole/main.py
+novaconsole/openstack.py
+novaconsole.egg-info/PKG-INFO
+novaconsole.egg-info/SOURCES.txt
+novaconsole.egg-info/dependency_links.txt
+novaconsole.egg-info/entry_points.txt
+novaconsole.egg-info/requires.txt
+novaconsole.egg-info/top_level.txt

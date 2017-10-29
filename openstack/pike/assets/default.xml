@@ -1,0 +1,15 @@
+<network>
+  <name>default</name>
+  <bridge name="virbr0"/>
+  <!-- <forward mode="nat" dev="eth0"/> -->
+  <forward mode="nat"/>
+  <ip address="192.168.122.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start='192.168.122.100' end='192.168.122.200'/>
+      <host mac='52:54:00:aa:bb:10' name='pike-ovs-centos7-vdb64g-ram16384-cpu8' ip='192.168.122.10'/>
+      <host mac='52:54:00:aa:bb:11' name='pike-ovs-centos7-vdb64g-ram16384-cpu8' ip='192.168.122.11'/>
+      <host mac='52:54:00:aa:bb:12' name='pike-ovs-centos7-vdb64g-ram16384-cpu8' ip='192.168.122.12'/>
+    </dhcp>
+  </ip>
+</network>
+

@@ -1,0 +1,1 @@
+/usr/lib/python2.7/site-packages/nova/virt/libvirt/.driver.py

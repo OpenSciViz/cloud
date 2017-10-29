@@ -1,0 +1,5 @@
+# This file is included from /etc/ntp.conf. It specifies the password used to
+# decrypt files containing private keys and identity parameters. The password
+# is required only if the files have been encrypted.
+#
+#crypto pw apassword

@@ -1,0 +1,19 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh pool-edit VMs-1
+or other application using the libvirt API.
+-->
+
+<pool type='dir'>
+  <name>VMs-1</name>
+  <uuid>89cb0bc7-48fb-4726-b8c7-38b91de36bf5</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/home/hon/aug2017/ocata/baremetal/VMs</path>
+  </target>
+</pool>

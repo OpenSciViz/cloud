@@ -1,0 +1,19 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh pool-edit VMs-4
+or other application using the libvirt API.
+-->
+
+<pool type='dir'>
+  <name>VMs-4</name>
+  <uuid>b66fc255-8da4-4a35-bad9-53c36d31f1e4</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/home/hon/oct2017/pike/baremetal/VMs</path>
+  </target>
+</pool>

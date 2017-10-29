@@ -1,0 +1,3 @@
+[console_scripts]
+novaconsole = novaconsole.main:main
+

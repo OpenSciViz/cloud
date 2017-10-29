@@ -1,0 +1,35 @@
+heat_template_version: 2013-05-23
+
+description: Simple template to deploy a stack with two virtual machine instances
+
+parameters:
+  image_name_1: 
+    type: string 
+    label: Image Name 
+    description: SCOIMAGE Specify an image name for instance1 
+    default: cirros-0.3.1-x86_64
+  image_name_2: 
+    type: string 
+    label: Image Name 
+    description: SCOIMAGE Specify an image name for instance2 
+    default: cirros-0.3.1-x86_64 
+  network_id:
+    type: string
+    label: Network ID
+    description: SCONETWORK Network to be used for the compute instance
+
+resources: 
+  my_instance1: 
+    type: OS::Nova::Server 
+    properties: 
+      image: { get_param: image_name_1 } 
+      flavor: m1.small 
+      networks:
+        - network : { get_param : network_id }
+  my_instance2: 
+    type: OS::Nova::Server 
+    properties: 
+      image: { get_param: image_name_2 } 
+      flavor: m1.tiny
+      networks:
+        - network : { get_param : network_id }

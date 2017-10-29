@@ -1,0 +1,2 @@
+# arches that mono builds on
+%mono_arches %{ix86} x86_64 sparc sparcv9 ia64 %{arm} alpha s390x ppc ppc64

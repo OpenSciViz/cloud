@@ -1,0 +1,14 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh net-edit ovsbr0
+or other application using the libvirt API.
+-->
+
+<network>
+  <name>ovsbr0</name>
+  <uuid>17ce7a24-fee0-48a6-9b1b-968ae9b84a71</uuid>
+  <forward mode='bridge'/>
+  <bridge name='ovsbr0'/>
+  <virtualport type='openvswitch'/>
+</network>

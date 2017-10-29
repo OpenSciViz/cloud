@@ -1,0 +1,24 @@
+heat_template_version: 2013-05-23 
+description: Template to Deploy on NPIV v7k storage only
+
+parameters:
+  network_id1:
+    type: string
+    description: SCONETWORK ID of the (nova) network a server should be deployed to.
+  flavor_id:
+    type: string
+    description: SCOFLAVOR The flavor to be applied to the server DatabaseTierVM.
+  image:
+    type: string
+    label: Image
+    description: SCOIMAGE The Image to be deployed
+resources:
+  heat:
+    type: OS::Nova::Server
+    properties:
+      image: { get_param: image }
+      flavor: { get_param: flavor_id }
+      availability_zone: D0EB
+      metadata: { selected-scg: d91acbbe-3d81-4279-b389-54b3ad4a1c8c, selected-storage-template: 0431b2f3-fea6-4aa5-b3fb-d0e82ccf5ebb }
+      networks:
+         - network : { get_param : network_id1 }

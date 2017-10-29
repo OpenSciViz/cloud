@@ -1,0 +1,3 @@
+https://wiki.smartos.org/display/DOC/Download+SmartOS
+https://download.clearlinux.org/current/
+https://docs.openstack.org/image-guide/obtain-images.html

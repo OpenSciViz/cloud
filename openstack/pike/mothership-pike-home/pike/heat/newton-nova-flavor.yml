@@ -1,0 +1,13 @@
+heat_template_version: 2016-10-14
+
+description: Template to create a  Nova custom flavor.
+
+resources:  
+  nova_flavor:
+    type: OS::Nova::Flavor
+    properties:
+      ephemeral: 1
+      is_public: true
+      name: custom-tiny.m1
+      ram: 512
+      vcpus: 1

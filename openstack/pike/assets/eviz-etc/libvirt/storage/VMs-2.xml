@@ -1,0 +1,19 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh pool-edit VMs-2
+or other application using the libvirt API.
+-->
+
+<pool type='dir'>
+  <name>VMs-2</name>
+  <uuid>6b9f371d-98fd-40df-8e92-f65f8458e9f3</uuid>
+  <capacity unit='bytes'>0</capacity>
+  <allocation unit='bytes'>0</allocation>
+  <available unit='bytes'>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/home/hon/sep2017/pike/baremetal/VMs</path>
+  </target>
+</pool>

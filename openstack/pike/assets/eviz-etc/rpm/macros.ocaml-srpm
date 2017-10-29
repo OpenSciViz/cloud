@@ -1,0 +1,2 @@
+# arches that ocaml runs on
+%ocaml_arches aarch64 alpha %{arm} %{ix86} ia64 x86_64 ppc ppc64 ppc64le sparc sparcv9

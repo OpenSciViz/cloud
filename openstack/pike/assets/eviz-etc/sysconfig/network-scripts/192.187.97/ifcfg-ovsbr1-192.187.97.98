@@ -1,0 +1,18 @@
+# http://prolinuxhub.com/configure-start-up-scripts-for-ovs-on-centos-and-red-hat/
+# ovs-vsctl add-br ovsbr1
+# ovs-vsctl add-port ovsbr1 enp5s0f1
+# since there is only 1 active physical NIC (enp5s0f1), no worries about packet loops with STP off?
+# assume physical NIC is attached to this bridge so set IP, GW, and NMASK here:
+DEVICE=ovsbr1
+NAME=ovsbr1
+DEVICETYPE=ovs
+TYPE=OVSBridge
+ONBOOT=yes
+HOTPLUG=no
+OVSBOOTPROTO=static
+STP=off
+NM_CONTROLLED=no
+IPADDR=192.187.97.98
+GATEWAY=192.187.97.97
+NETMASK=255.255.255.248
+#DELAY=3

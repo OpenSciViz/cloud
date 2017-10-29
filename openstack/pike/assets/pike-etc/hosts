@@ -1,0 +1,44 @@
+# some of the openstack subsystems expect a domain-name "controller"
+# https://docs.openstack.org/neutron/pike/install/environment-networking-storage-cinder.html
+# neutron also wants compute and block storage node IPs
+
+127.0.0.1   pike.openstack pike controller compute block localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+192.168.122.233 ubuntu17-1cpu-1gram ubu17
+192.168.122.241 coreos-1cpu-1gram   core
+192.168.122.234 centos7-1cpu-1gram  cen7
+192.168.122.237 fedora26-1cpu-1gram fed26
+192.168.122.231 atomic-1cpu-1gram   atomic
+
+
+# mothership VM with 2 OVS bridges and 3 vNICs eth0 on ovsbr0, eth1 on ovsbr1, and eth2 stand-alone
+# eht1 on ovsbr1 is attached to the baremetal ovsbr1
+172.16.1.1   pike-ovs0.openstack pike-ovs0
+172.16.1.2   pike-eth2.openstack pike-eth2 # pike
+172.17.1.1   pike-ovs1.openstack pike-ovs1
+
+# test nested virtualizaion VM in mothership with 2 vNICs eth0 and eth1
+172.16.2.1   aa-nested-eth0.openstack aa-nested-eth0 
+172.17.2.1   aa-nested-eth1.pike aa-nested-eth1 aa-nested nested
+
+#172.17.0.10 ocata10 whatcloud10
+#172.17.0.11 ocata11 whatcloud11
+#172.17.1.1 packstack
+#172.17.1.1 whatcloud
+#172.17.2.1 ovsstack
+
+# aws route 53 domainnames
+# 192.187.97.98 1-percent.us
+# deprecate 90ghz.net
+# 192.187.97.98 90ghz.be
+# 63.141.239.90 90ghz.org
+# earthlimb.net
+# eviz.biz
+# eviz.cc
+# gregory.fitness
+# honhedge.com
+# honsys.com
+# innerplanets.org
+# urbanhike.us
+

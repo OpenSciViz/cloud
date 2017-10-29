@@ -1,0 +1,32 @@
+# CentOS-Ceph-Jewel.repo
+#
+# Please see http://wiki.centos.org/SpecialInterestGroup/Storage for more
+# information
+
+[centos-ceph-jewel]
+name=CentOS-$releasever - Ceph Jewel
+baseurl=http://mirror.centos.org/centos/$releasever/storage/$basearch/ceph-jewel/
+gpgcheck=1
+enabled=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage
+
+[centos-ceph-jewel-test]
+name=CentOS-$releasever - Ceph Jewel Testing
+baseurl=http://buildlogs.centos.org/centos/$releasever/storage/$basearch/ceph-jewel/
+gpgcheck=0
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage
+
+[centos-ceph-jewel-debuginfo]
+name=CentOS-$releasever - Ceph Jewel DebugInfo
+baseurl=http://debuginfo.centos.org/centos/$releasever/storage/$basearch/ceph-jewel/
+gpgcheck=0
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage
+
+[centos-ceph-jewel-source]
+name=CentOS-$releasever - Ceph Jewel Source
+baseurl=http://vault.centos.org/centos/$releasever/storage/Source/ceph-jewel/
+gpgcheck=0
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-SIG-Storage

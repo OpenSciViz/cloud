@@ -1,0 +1,1 @@
+pike/logrotate.d

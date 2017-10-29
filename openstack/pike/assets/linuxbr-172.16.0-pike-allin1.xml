@@ -1,0 +1,20 @@
+<network>
+  <name>linuxbr16</name>
+  <bridge name="linuxbr16"/>
+<!-- 
+  <forward mode="nat" dev="linuxbr16"/> 
+-->
+  <forward mode="nat"/>
+  <ip address="172.16.0.1" netmask="255.255.0.0">
+    <dhcp>
+      <range start='172.16.1.1' end='172.16.255.254'/>
+      <host mac='52:54:00:aa:bb:02' name='pike-allin1' ip='172.16.0.2'/>
+<!--
+      <host mac='52:54:00:aa:bb:10' name='pike-allin1' ip='172.16.0.10'/>
+      <host mac='52:54:00:aa:bb:11' name='pike-allin1' ip='172.16.0.11'/>
+      <host mac='52:54:00:aa:bb:12' name='pike-allin1' ip='172.16.0.12'/>
+-->
+    </dhcp>
+  </ip>
+</network>
+

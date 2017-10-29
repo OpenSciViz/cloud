@@ -1,0 +1,7 @@
+Your old modules store and local changes were migrated to the new structure in
+in the following directory:
+
+/etc/selinux/targeted/active
+
+WARNING: Do not remove this file or remove /etc/selinux/targeted/modules
+completely if you are confident that you don't need old files anymore.

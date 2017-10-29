@@ -1,0 +1,4 @@
+# Created by cloud-init v. 0.7.9 on Mon, 25 Sep 2017 16:33:00 +0000
+
+# User rules for centos
+centos ALL=(ALL) NOPASSWD:ALL

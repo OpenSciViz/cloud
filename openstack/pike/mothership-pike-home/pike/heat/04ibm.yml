@@ -1,0 +1,37 @@
+heat_template_version: 2013-05-23
+
+description: Simple template to set the admin password for a virtual machine
+
+parameters:
+  key_name:
+    type: string
+    label: Key Name
+    description: SCOKEY Name of the key pair to be used for the compute instance
+  image_name:
+    type: string
+    label: Image Name
+    description: SCOIMAGE Name of the image to be used for the compute instance
+  password:
+    type: string
+    label: password
+    description: admin password
+    hidden: true
+
+ 
+resources:
+  my_instance:
+    type: OS::Nova::Server
+    properties:
+      key_name: { get_param: key_name }
+      admin_user: sampleuser
+      image: { get_param: image_name }
+      flavor: m1.small
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash
+            echo "Setting  password to  " $password           
+            echo $password |passwd --stdin sampleuser
+
+          params:
+            $password: { get_param: password }
