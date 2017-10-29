@@ -14,5 +14,7 @@ git config --global --list
 To avouid username and password prompt:
 git config credential.helper store
 
+---
+Nice git ref: http://happygitwithr.com/hello-git.html
 
 
