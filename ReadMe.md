@@ -18,4 +18,5 @@ Nice git ref: http://happygitwithr.com/hello-git.html
 ---
 
 As of March 24 2018 gitlab and github passwords should be congruent?
+Also need todouble check honsys vs. evizbiz ...
 
