@@ -1,0 +1,6 @@
+[submodule "dpc-app"]
+	path = dpc-app
+	url = https://github.com/CMSgov/dpc-app.git
+[submodule "beneficiary-fhir-data"]
+	path = beneficiary-fhir-data
+	url = https://github.com/CMSgov/beneficiary-fhir-data.git
